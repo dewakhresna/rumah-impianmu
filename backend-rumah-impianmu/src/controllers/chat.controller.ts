@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
 import { Groq } from "groq-sdk";
-import { hitungTopsis } from "../utils/topsis";
+import { hitungTopsis, Rumah } from "../utils/topsis";
 import HouseService from "../service/house.service";
 
 const groq = new Groq({
@@ -16,7 +16,15 @@ export default {
         return res.status(400).json({ message: "Pesan wajib diisi" });
       }
 
-      const dataRumah = await HouseService.findAll();
+      const rawData = await HouseService.findAll();
+
+      const dataRumah: Rumah[] = rawData.map((r) => ({
+        nama: r.nama ?? "Tanpa Nama",
+        c1_harga: r.c1_harga ?? 0,
+        c2_jarak: r.c2_jarak ?? 0,
+        c3_keamanan: r.c3_keamanan ?? 0,
+        c4_luas: r.c4_luas ?? 0,
+      }));
 
       if (dataRumah.length === 0) {
         return res
