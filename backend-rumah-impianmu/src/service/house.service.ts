@@ -1,31 +1,28 @@
-import prisma from "../prisma";
-
-export interface HouseInput {
-    nama: string;
-    c1_harga: number;
-    c2_jarak: number;
-    c3_keamanan: number;
-    c4_luas: number;
-}
+import House, { HouseAttributes } from '../models/house.model.js';
 
 export default {
     async findAll() {
-        return await prisma.house.findMany();
+        // raw: true supaya hasilnya objek JSON murni (penting untuk perhitungan TOPSIS)
+        return await House.findAll({ raw: true });
     },
 
     async findById(id: number) {
-        return await prisma.house.findUnique({ where: { id } });
+        return await House.findByPk(id, { raw: true });
     },
 
-    async create(data: HouseInput) {
-        return await prisma.house.create({ data });
+    async create(data: HouseAttributes) {
+        return await House.create(data as any);
     },
 
-    async update(id: number, data: Partial<HouseInput>) {
-        return await prisma.house.update({ where: { id }, data });
+    async update(id: number, data: Partial<HouseAttributes>) {
+        return await House.update(data, { 
+            where: { id } 
+        });
     },
 
     async delete(id: number) {
-        return await prisma.house.delete({ where: { id } });
+        return await House.destroy({ 
+            where: { id } 
+        });
     }
 };

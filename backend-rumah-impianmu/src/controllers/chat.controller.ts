@@ -1,7 +1,7 @@
 import { Request, Response } from "express";
 import { Groq } from "groq-sdk";
-import { hitungTopsis, Rumah } from "../utils/topsis";
-import HouseService from "../service/house.service";
+import { hitungTopsis, Rumah } from "../utils/topsis.js";
+import HouseService from "../service/house.service.js";
 
 const groq = new Groq({
   apiKey: "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",
