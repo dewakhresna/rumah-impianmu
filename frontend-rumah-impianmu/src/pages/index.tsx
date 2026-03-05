@@ -2,8 +2,8 @@ import Head from 'next/head';
 import Navbar from "@/components/Navbar";
 import HeroSection from "@/components/HeroSection";
 import ListingGrid from "@/components/ListingGrid";
-import LiveChat from "@/components/LiveChat";
-import Footer from "@/components/Footer"; // <-- Import Footer di sini
+import LiveChat from "@/components/chat/LiveChat";
+import Footer from "@/components/Footer"; 
 
 export default function Home() {
   return (
