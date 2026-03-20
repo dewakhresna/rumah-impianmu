@@ -1,5 +1,5 @@
 import { Request, Response } from "express";
-import HouseService from "../service/house.service";
+import HouseService from "../service/house.service.js";
 
 export default {
   async getAll(req: Request, res: Response) {
