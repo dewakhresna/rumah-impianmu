@@ -103,7 +103,7 @@ UserModel.init(
     },
     role: {
       type: DataTypes.STRING,
-      defaultValue: ROLES.MEMBER,
+      defaultValue: ROLES.USER,
     },
     profilePicture: {
       type: DataTypes.STRING,
