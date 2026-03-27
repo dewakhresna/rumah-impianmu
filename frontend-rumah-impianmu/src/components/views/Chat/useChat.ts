@@ -1,6 +1,6 @@
 import { useState, useRef, useEffect } from "react";
 import api from "@/utils/api";
-import { Message } from "./types";
+import { Message } from "./types.js";
 
 export function useChat() {
   const [messages, setMessages] = useState<Message[]>([

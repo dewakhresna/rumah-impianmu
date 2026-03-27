@@ -31,7 +31,7 @@ export const useLogin = () => {
 
       // Redirect otomatis sesuai role
       if (decoded.role === "admin") {
-        router.push("/admin/dashboard");
+        router.push("/admin/house");
       } else {
         router.push("/"); // halaman utama pencarian properti
       }

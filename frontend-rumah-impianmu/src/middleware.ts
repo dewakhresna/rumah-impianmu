@@ -23,7 +23,7 @@ export function middleware(request: NextRequest) {
     // Jika sudah login tapi buka halaman /login, lempar ke dashboard masing-masing
     if (isLoginPage) {
       if (decoded.role === 'admin') {
-        return NextResponse.redirect(new URL('/admin/dashboard', request.url));
+        return NextResponse.redirect(new URL('/admin/house', request.url));
       }
       return NextResponse.redirect(new URL('/login', request.url));
     }

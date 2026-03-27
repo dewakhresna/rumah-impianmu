@@ -4,10 +4,31 @@ import HouseService from "../service/house.service.js";
 export default {
   async getAll(req: Request, res: Response) {
     try {
-      const houses = await HouseService.findAll();
-      return res.status(200).json(houses);
+      const page = Number(req.query.page) || 1;
+      const limit = Number(req.query.limit) || 10;
+      const search = (req.query.search as string) || "";
+
+      const result = await HouseService.findAll(page, limit, search);
+      const totalPages = Math.ceil(result.count / limit);
+
+      return res.status(200).json({
+        meta: {
+          status: 200,
+          message: "Success get all houses"
+        },
+        data: result.rows,
+        pagination: {
+          totalData: result.count,
+          totalPages: totalPages,
+          currentPage: page,
+          limit: limit
+        }
+      });
     } catch (error: any) {
-      res.status(500).json({ message: error.message });
+      return res.status(500).json({ 
+        meta: { status: 500, message: error.message },
+        data: null 
+      });
     }
   },
 
@@ -15,38 +36,89 @@ export default {
     try {
       const { id } = req.params;
       const house = await HouseService.findById(Number(id));
-      res.status(200).json(house);
+
+      if (!house) {
+        return res.status(404).json({
+          meta: { status: 404, message: "House not found" },
+          data: null
+        });
+      }
+
+      return res.status(200).json({
+        meta: { status: 200, message: "Success get house" },
+        data: house
+      });
     } catch (error: any) {
-      res.status(500).json({ message: error.message });
+      return res.status(500).json({ 
+        meta: { status: 500, message: error.message },
+        data: null 
+      });
     }
   },
 
   async create(req: Request, res: Response) {
     try {
       const newHouse = await HouseService.create(req.body);
-      res.status(201).json(newHouse);
+      
+      return res.status(201).json({
+        meta: { status: 201, message: "Success create house" },
+        data: newHouse
+      });
     } catch (error: any) {
-      res.status(500).json({ message: error.message });
+      return res.status(500).json({ 
+        meta: { status: 500, message: error.message },
+        data: null 
+      });
     }
   },
 
   async update(req: Request, res: Response) {
     try {
       const { id } = req.params;
-      const updatedHouse = await HouseService.update(Number(id), req.body);
-      res.status(200).json(updatedHouse);
+      
+      const updatedData = await HouseService.update(Number(id), req.body);
+
+      if (updatedData[0] === 0) {
+        return res.status(404).json({
+          meta: { status: 404, message: "House not found or no changes made" },
+          data: null
+        });
+      }
+
+      return res.status(200).json({
+        meta: { status: 200, message: "Success update house" },
+        // kembalikan ID dan data yang baru saja dikirim sebagai bentuk konfirmasi
+        data: { id: Number(id), ...req.body } 
+      });
     } catch (error: any) {
-      res.status(500).json({ message: error.message });
+      return res.status(500).json({ 
+        meta: { status: 500, message: error.message },
+        data: null 
+      });
     }
   },
 
   async delete(req: Request, res: Response) {
     try {
       const { id } = req.params;
-      await HouseService.delete(Number(id));
-      res.json({ message: "Data berhasil dihapus" });
+      const deletedRow = await HouseService.delete(Number(id));
+
+      if (!deletedRow) {
+        return res.status(404).json({
+          meta: { status: 404, message: "House not found" },
+          data: null
+        });
+      }
+
+      return res.status(200).json({
+        meta: { status: 200, message: "Success delete house" },
+        data: null
+      });
     } catch (error: any) {
-      res.status(500).json({ message: error.message });
+      return res.status(500).json({ 
+        meta: { status: 500, message: error.message },
+        data: null 
+      });
     }
   },
 };

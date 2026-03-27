@@ -1,5 +1,5 @@
 import { Avatar } from "@heroui/react";
-import { Message } from "./types";
+import { Message } from "./types.js";
 
 interface ChatBubbleProps {
   message: Message;
