@@ -36,7 +36,7 @@ const useHouse = () => {
     enabled: router.isReady, 
   });
 
-  // LOGGING: Pantau status React Query secara real-time
+  // LOGGING: status React Query secara real-time
   console.log("📡 Status React Query:", { isLoadingHouse, isError: !!error, dataHouse, error });
 
   return {

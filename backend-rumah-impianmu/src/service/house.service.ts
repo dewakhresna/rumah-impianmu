@@ -2,7 +2,7 @@ import { Op } from "sequelize";
 import House, { HouseAttributes } from '../models/house.model.js';
 
 export default {
-  async findAll(page: number, limit: number, search: string) {
+  async findAll(page: number = 1, limit: number = 10, search: string = "") {
     // Hitung offset (data ke-berapa yang mulai diambil)
     const offset = (page - 1) * limit;
 
@@ -19,6 +19,14 @@ export default {
 
     return { count, rows };
   }, 
+
+  async getAllForChat() {
+    // Mengambil semua data murni tanpa limit dan pagination
+    return await House.findAll({
+      raw: true, // Mengubah output menjadi JSON murni yang sangat ringan untuk dibaca AI
+      order: [['id', 'DESC']]
+    });
+  },
 
   async findById(id: number) {
     return await House.findByPk(id, { raw: true });

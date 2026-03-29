@@ -16,7 +16,7 @@ export default {
         return res.status(400).json({ message: "Pesan wajib diisi" });
       }
 
-      const rawData = await HouseService.findAll();
+      const rawData = await HouseService.getAllForChat();
 
       const dataRumah: Rumah[] = rawData.map((r) => ({
         nama: r.nama ?? "Tanpa Nama",

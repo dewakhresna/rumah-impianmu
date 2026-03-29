@@ -7,10 +7,12 @@ import { COLUMN_LISTS_HOUSE } from "./House.constants";
 import DropdownAction from "@/components/commons/DropdownAction";
 import useChangeUrl from "@/hooks/useChangeUrl";
 import useHouse from "./useHouse";
+import AddHouseModal from "./AddHouseModal";
+import DeleteHouseModal from "./DeleteHouseModal";
 
 const House = () => {
   const { push, isReady, query } = useRouter();
-  
+
   const {
     dataHouse,
     isLoadingHouse,
@@ -46,12 +48,14 @@ const House = () => {
             />
           );
         case "c1_harga":
-            return cellValue ? `Rp ${Number(cellValue).toLocaleString('id-ID')}` : "-";
+          return cellValue
+            ? `Rp ${Number(cellValue).toLocaleString("id-ID")}`
+            : "-";
         default:
           return cellValue as ReactNode;
       }
     },
-    [push, deleteCategoryModal]
+    [push, deleteCategoryModal],
   );
 
   // LOGGING: Coba perhatikan di console sekarang, bentuknya pasti { meta: {...}, data: [...], pagination: {...} }
@@ -61,19 +65,24 @@ const House = () => {
     <section className="p-4">
       {Object.keys(query).length > 0 && (
         <DataTable
-          buttonTopContentLabel="Tambah Rumah"
+          buttonTopContentLabel="Add New House"
           columns={COLUMN_LISTS_HOUSE}
-          
-          data={dataHouse?.data || []} 
-          
-          emptyContent="Data rumah masih kosong"
-          isLoading={isLoadingHouse || isRefetchingHouse} 
+          data={dataHouse?.data || []}
+          emptyContent="The house data is still empty"
+          isLoading={isLoadingHouse || isRefetchingHouse}
           onClickButtonTopContent={addCategoryModal.onOpen}
           renderCell={renderCell}
-          
-          totalPages={dataHouse?.pagination?.totalPages || 1} 
+          totalPages={dataHouse?.pagination?.totalPages || 1}
         />
       )}
+
+      <AddHouseModal {...addCategoryModal} refetchHouse={refetchHouse} />
+      <DeleteHouseModal
+        {...deleteCategoryModal} // Memakai state dari baris 26 (const deleteCategoryModal = useDisclosure();)
+        selectedId={selectedId}
+        setSelectedId={setSelectedId}
+        refetchHouse={refetchHouse}
+      />
     </section>
   );
 };

@@ -142,14 +142,12 @@ export default {
     try {
       const { code } = req.body as { code: string };
 
-      // Cari user berdasarkan kode aktivasi
       const user = await UserModel.findOne({ where: { activationCode: code } });
       
       if (!user) {
         return response.notFound(res, "invalid activation code");
       }
 
-      // Aktifkan user
       await user.update({ isActive: true });
 
       return response.success(res, user, "user successfully activated");

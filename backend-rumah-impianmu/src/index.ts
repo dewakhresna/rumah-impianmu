@@ -1,6 +1,7 @@
 import express from "express";
 import router from "./routes/api.js";
 import cors from 'cors';
+import HouseDetail from './models/house_detail.model.js';
 import sequelize from './db.js';
 
 const app = express();
