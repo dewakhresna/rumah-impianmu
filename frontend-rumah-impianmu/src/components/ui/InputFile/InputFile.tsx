@@ -42,6 +42,14 @@ const InputFile = (props: PropTypes) => {
   const drop = useRef<HTMLLabelElement>(null);
   const dropzoneId = useId();
 
+  // State untuk melacak apakah gambar dari server gagal dimuat (Ghost Image)
+  const [isImageBroken, setIsImageBroken] = useState(false);
+
+  // Reset status error setiap kali nilai preview berubah/ada file baru
+  useEffect(() => {
+    setIsImageBroken(false);
+  }, [preview]);
+
   const handleDragOver = (e: DragEvent) => {
     if (isDropable) {
       e.preventDefault();
@@ -89,16 +97,24 @@ const InputFile = (props: PropTypes) => {
           { "border-danger-500": isInvalid },
         )}
       >
-        {preview && (
-          <div className="relative flex flex-col items-center justify-center p-5">
+        {/* HANYA TAMPILKAN JIKA ADA PREVIEW DAN GAMBARNYA TIDAK RUSAK */}
+        {preview && !isImageBroken && (
+          <div className="relative flex flex-col items-center justify-center p-5 w-full h-full">
             <div className="mb-2 w-1/2">
-              <Image fill src={preview} alt="image" className="!relative" />
+              <Image 
+                fill 
+                src={preview} 
+                alt="image" 
+                className="!relative pointer-events-none" 
+                onError={() => setIsImageBroken(true)} // Sensor jika gambar hilang
+              />
             </div>
             <Button
               isIconOnly
               onPress={onDelete}
+              onClick={(e) => e.preventDefault()} // Mencegah klik tembus ke upload folder
               disabled={isDeleting}
-              className="absolute right-2 top-2 flex h-9 w-9 items-center justify-center rounded bg-danger-100"
+              className="absolute right-2 top-2 z-10 flex h-9 w-9 items-center justify-center rounded bg-danger-100"
             >
               {isDeleting ? (
                 <Spinner size="sm" color="danger" />
@@ -108,7 +124,9 @@ const InputFile = (props: PropTypes) => {
             </Button>
           </div>
         )}
-        {!preview && !isUploading && (
+
+        {/* TAMPILKAN KOTAK UPLOAD JIKA KOSONG ATAU JIKA GAMBARNYA RUSAK */}
+        {(!preview || isImageBroken) && !isUploading && (
           <div className="flex flex-col items-center justify-center p-5">
             <CiSaveUp2 className="mb-2 h-10 w-10 text-gray-400" />
             <p className="text-center text-sm font-semibold text-gray-500">
@@ -118,11 +136,14 @@ const InputFile = (props: PropTypes) => {
             </p>
           </div>
         )}
+
+        {/* TAMPILAN SAAT SEDANG LOADING UPLOAD */}
         {isUploading && (
           <div className="flex flex-col items-center justify-center p-5">
             <Spinner color="danger" />
           </div>
         )}
+
         <input
           name={name}
           type="file"
@@ -130,7 +151,7 @@ const InputFile = (props: PropTypes) => {
           accept="image/*"
           id={`dropzone-file-${dropzoneId}`}
           onChange={handleOnUpload}
-          disabled={preview !== ""}
+          disabled={isUploading || isDeleting} // Hanya terkunci saat ada proses mutasi
           onClick={(e) => {
             e.currentTarget.value = "";
             e.target.dispatchEvent(new Event("change", { bubbles: true }));

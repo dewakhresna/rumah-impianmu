@@ -53,12 +53,14 @@ const HouseDetailTab = (props: PropTypes) => {
   } = useHouseDetailTab();
 
   const getImageUrl = (imagePath?: string | FileList | null) => {
+    if (!imagePath || imagePath === "") return "";
+
     if (typeof imagePath === "string") {
-      if (imagePath.startsWith("http")) return imagePath; // Jaga-jaga jika masih ada data lama format http
-      return `http://localhost:5000${imagePath}`; // Tambahkan URL Backend untuk data baru
+      if (imagePath.startsWith("http")) return imagePath;
+      return `http://localhost:5000${imagePath}`;
     }
     if (imagePath && (imagePath as FileList).length > 0) {
-      return URL.createObjectURL((imagePath as FileList)[0]); // Untuk preview file lokal yang baru di-drag
+      return URL.createObjectURL((imagePath as FileList)[0]);
     }
     return "";
   };

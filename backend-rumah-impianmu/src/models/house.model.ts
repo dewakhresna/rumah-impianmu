@@ -11,12 +11,12 @@ export interface HouseAttributes {
 }
 
 class House extends Model<HouseAttributes> implements HouseAttributes {
-  public id!: number;
-  public nama!: string | null;
-  public c1_harga!: number | null;
-  public c2_jarak!: number | null;
-  public c3_keamanan!: number | null;
-  public c4_luas!: number | null;
+  declare id: number;
+  declare nama: string | null;
+  declare c1_harga: number | null;
+  declare c2_jarak: number | null;
+  declare c3_keamanan: number | null;
+  declare c4_luas: number | null;
 }
 
 House.init({
@@ -33,7 +33,7 @@ House.init({
 }, {
   sequelize,
   tableName: 'houses',
-  timestamps: false, // Matikan jika tabel Anda tidak punya createdAt/updatedAt
+  timestamps: false,
 });
 
 export default House;

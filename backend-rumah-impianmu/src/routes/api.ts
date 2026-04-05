@@ -19,8 +19,19 @@ router.put("/houses/:id", houseController.update);
 router.delete("/houses/:id", houseController.delete);
 
 // --- RUTE HOUSE DETAILS ---
-router.post("/house-details/create", houseDetailController.create);
-router.get("/house-details/house/:house_id", houseDetailController.getByHouseId);
+router.post(
+  "/house-details/create",
+  uploadMiddleware.fields([
+    { name: "image_1", maxCount: 1 },
+    { name: "image_2", maxCount: 1 },
+    { name: "image_3", maxCount: 1 },
+  ]),
+  houseDetailController.create,
+);
+router.get(
+  "/house-details/house/:house_id",
+  houseDetailController.getByHouseId,
+);
 router.put("/house-details/house/:house_id", houseDetailController.update);
 router.delete("/house-details/house/:house_id", houseDetailController.delete);
 
@@ -35,7 +46,11 @@ router.put("/auth/profile", authMiddleware, authController.updateProfile);
 router.put("/auth/password", authMiddleware, authController.updatePassword);
 
 // --- RUTE UPLOAD FILE ---
-router.post("/media/upload", uploadMiddleware.single("file"), uploadController.uploadSingle);
+router.post(
+  "/media/upload",
+  uploadMiddleware.single("file"),
+  uploadController.uploadSingle,
+);
 router.delete("/media/remove", uploadController.removeFile);
 
 export default router;

@@ -15,15 +15,16 @@ export interface HouseDetailAttributes {
 }
 
 class HouseDetail extends Model<HouseDetailAttributes> implements HouseDetailAttributes {
-  public id!: number;
-  public house_id!: number;
-  public contact!: string | null;
-  public description!: string | null;
-  public image_1!: string | null;
-  public image_2!: string | null;
-  public image_3!: string | null;
-  public beds!: number | null;
-  public baths!: number | null;
+  // UBAH SEMUA 'public' MENJADI 'declare'
+  declare id: number;
+  declare house_id: number;
+  declare contact: string | null;
+  declare description: string | null;
+  declare image_1: string | null;
+  declare image_2: string | null;
+  declare image_3: string | null;
+  declare beds: number | null;
+  declare baths: number | null;
 }
 
 HouseDetail.init({
