@@ -5,6 +5,7 @@ import House from './house.model.js';
 export interface HouseDetailAttributes {
   id?: number;
   house_id: number;
+  contact: string | null;
   description: string | null;
   image_1: string | null;
   image_2: string | null;
@@ -16,6 +17,7 @@ export interface HouseDetailAttributes {
 class HouseDetail extends Model<HouseDetailAttributes> implements HouseDetailAttributes {
   public id!: number;
   public house_id!: number;
+  public contact!: string | null;
   public description!: string | null;
   public image_1!: string | null;
   public image_2!: string | null;
@@ -40,6 +42,7 @@ HouseDetail.init({
     onDelete: 'CASCADE', 
     onUpdate: 'CASCADE'
   },
+  contact: DataTypes.STRING,
   description: {
     type: DataTypes.TEXT, 
   },

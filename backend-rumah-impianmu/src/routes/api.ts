@@ -4,6 +4,8 @@ import chatController from "../controllers/chat.controller.js";
 import houseController from "../controllers/house.controller.js";
 import authController from "../controllers/auth.controller.js";
 import houseDetailController from "../controllers/house_detail.controller.js";
+import uploadMiddleware from "../middlewares/upload.middleware.js";
+import uploadController from "../controllers/upload.controller.js";
 
 const router = express.Router();
 
@@ -27,8 +29,13 @@ router.post("/auth/register", authController.register);
 router.post("/auth/login", authController.login);
 router.post("/auth/activation", authController.activation);
 
+// --- RUTE OTENTIKASI (USER) ---
 router.get("/auth/me", authMiddleware, authController.me);
 router.put("/auth/profile", authMiddleware, authController.updateProfile);
 router.put("/auth/password", authMiddleware, authController.updatePassword);
+
+// --- RUTE UPLOAD FILE ---
+router.post("/media/upload", uploadMiddleware.single("file"), uploadController.uploadSingle);
+router.delete("/media/remove", uploadController.removeFile);
 
 export default router;

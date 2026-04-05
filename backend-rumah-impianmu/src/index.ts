@@ -1,8 +1,8 @@
 import express from "express";
 import router from "./routes/api.js";
-import cors from 'cors';
-import HouseDetail from './models/house_detail.model.js';
-import sequelize from './db.js';
+import cors from "cors";
+import HouseDetail from "./models/house_detail.model.js";
+import sequelize from "./db.js";
 
 const app = express();
 
@@ -13,8 +13,16 @@ app.use(express.json());
 
 app.use("/api", router);
 
-app.listen(PORT, () => {
-    console.log(`Server is running on http://localhost:${PORT}`);
-})
+app.use("/uploads", express.static("public/uploads"));
 
-sequelize.sync({ alter: true }).then(() => console.log("Database tersinkronisasi!"));
+app.listen(PORT, () => {
+  console.log(`Server is running on http://localhost:${PORT}`);
+});
+
+sequelize
+  .sync({ alter: true })
+  .then(() => console.log("Database tersinkronisasi!"));
+  
+// sequelize.sync().then(() => {
+//   console.log("Database terhubung!");
+// });
