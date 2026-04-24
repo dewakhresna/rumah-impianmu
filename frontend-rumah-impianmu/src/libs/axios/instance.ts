@@ -25,11 +25,9 @@ instance.interceptors.request.use(
   (error) => Promise.reject(error),
 );
 
-// Interceptor untuk Response (Opsional, untuk menangani error global)
 instance.interceptors.response.use(
   (response) => response,
   (error) => {
-    // bisa tambahkan logika jika token expired (401), otomatis redirect ke login
     if (error.response?.status === 401) {
       Cookies.remove("token");
       if (typeof window !== "undefined") {

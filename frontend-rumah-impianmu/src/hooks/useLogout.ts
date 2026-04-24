@@ -5,12 +5,10 @@ export const useLogout = () => {
   const router = useRouter();
 
   const handleLogout = () => {
-    // 1. Hapus KTP Digital dari browser
-    Cookies.remove("token");
-    
-    // 2. Arahkan kembali ke halaman login
-    router.push("/login");
+    Cookies.remove("token", { path: "/" });
+
+    window.location.href = "/";
   };
 
-  return handleLogout; // Kembalikan fungsinya agar bisa dipanggil oleh komponen
+  return handleLogout;
 };

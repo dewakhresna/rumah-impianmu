@@ -111,7 +111,7 @@ UserModel.init(
     },
     isActive: {
       type: DataTypes.BOOLEAN,
-      defaultValue: false,
+      defaultValue: true,
     },
     activationCode: {
       type: DataTypes.STRING,

@@ -1,6 +1,7 @@
 import { Button } from "@heroui/react";
 import { Building2 } from "lucide-react";
 import Link from "next/link";
+import AuthMenu from "../Auth/AuthMenu/AuthMenu";
 
 export default function Navbar() {
   return (
@@ -23,14 +24,7 @@ export default function Navbar() {
         </nav>
 
         {/* CTA */}
-        <div className="flex items-center gap-4">
-          <Button variant="light" className="hidden sm:flex font-medium text-slate-600">
-            Log In
-          </Button>
-          <Button color="primary" className="bg-blue-600 font-medium rounded-xl shadow-blue-500/30 shadow-lg hover:-translate-y-0.5 transition-transform">
-            Register
-          </Button>
-        </div>
+        <AuthMenu />
       </div>
     </header>
   );

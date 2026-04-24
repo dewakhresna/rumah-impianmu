@@ -17,14 +17,13 @@ export const useLogin = () => {
     setErrorMsg("");
 
     try {
-      // Panggil fungsi login
       const response = await authServices.login({ identifier, password });
       
       // Ambil token dari respons backend
       const token = response.data.data; 
 
       // Simpan token di Cookies. 
-      Cookies.set("token", token, { expires: 1 }); // Expired 1 hari
+      Cookies.set("token", token, { expires: 1 });
 
       // Decode token untuk melihat role
       const decoded: any = jwtDecode(token);
@@ -33,10 +32,9 @@ export const useLogin = () => {
       if (decoded.role === "admin") {
         router.push("/admin/house");
       } else {
-        router.push("/"); // halaman utama pencarian properti
+        router.push("/"); 
       }
     } catch (error: any) {
-      // Tangkap pesan error dari backend
       const message = error.response?.data?.meta?.message || "Terjadi kesalahan pada server.";
       setErrorMsg(message);
     } finally {
