@@ -19,6 +19,7 @@ export default {
       const rawData = await HouseService.getAllForChat();
 
       const dataRumah: Rumah[] = rawData.map((r) => ({
+        id: r.id,
         nama: r.nama ?? "Tanpa Nama",
         c1_harga: r.c1_harga ?? 0,
         c2_jarak: r.c2_jarak ?? 0,

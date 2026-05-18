@@ -28,29 +28,22 @@ export function useChat() {
     setIsLoading(true);
 
     try {
-      // Sesuaikan endpoint dan properti balasan dengan backend
       const response = await api.post("/chat/send", {
         pesan: userMessage.text,
       });
 
-      // Ambil array rekomendasi dari response backend Anda
-      const daftarRekomendasi = response.data.data.rekomendasi;
-
-      let aiReplyText =
-        "Berikut adalah rekomendasi rumah terbaik berdasarkan kriteria Anda:\n\n";
-
-      // Looping 3 rumah terbaik saja agar chat tidak terlalu panjang
-      daftarRekomendasi.slice(0, 3).forEach((rumah: any, index: number) => {
-        // Pembulatan skor TOPSIS agar lebih rapi (misal 0.8523 -> 0.85)
-        const skor = Number(rumah.skor || 0).toFixed(2);
-        aiReplyText += `${index + 1}. ${rumah.nama} (Skor Kecocokan: ${skor})\n`;
-      });
-
-      aiReplyText += "\nApakah ada kriteria lain yang ingin Anda ubah?";
+      // Ambil maksimal 3 rekomendasi terbaik
+      const daftarRekomendasi = response.data.data.rekomendasi.slice(0, 3);
 
       setMessages((prev) => [
         ...prev,
-        { id: Date.now() + 1, role: "admin", text: aiReplyText },
+        { 
+          id: Date.now() + 1, 
+          role: "admin", 
+          text: "Berikut adalah rekomendasi rumah terbaik berdasarkan kriteria Anda:",
+          houses: daftarRekomendasi, // Lempar array langsung ke komponen
+          outroText: "Apakah ada kriteria lain yang ingin Anda ubah?"
+        },
       ]);
     } catch (error) {
       console.error("Error fetching chat response:", error);
