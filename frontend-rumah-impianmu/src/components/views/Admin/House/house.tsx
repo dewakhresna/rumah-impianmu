@@ -58,7 +58,6 @@ const House = () => {
     [push, deleteCategoryModal],
   );
 
-  // LOGGING: Coba perhatikan di console sekarang, bentuknya pasti { meta: {...}, data: [...], pagination: {...} }
   console.log("Data dari Backend:", dataHouse);
 
   return (

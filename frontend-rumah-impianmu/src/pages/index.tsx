@@ -1,7 +1,7 @@
 import Head from "next/head";
 import Navbar from "@/components/views/Home/Navbar";
 import HeroSection from "@/components/views/Home/HeroSection";
-import ListingGrid from "@/components/views/Home/ListingGrid";
+import ListingGrid from "@/components/views/Home/House/ListingGrid";
 import LiveChat from "@/components/views/Chat/LiveChat";
 import Footer from "@/components/views/Home/Footer";
 

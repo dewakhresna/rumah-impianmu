@@ -12,7 +12,6 @@ const instance = axios.create({
   timeout: 60 * 1000, // Timeout 1 menit
 });
 
-// Interceptor untuk Request (Otomatis sisipkan Token)
 instance.interceptors.request.use(
   (request) => {
     // Ambil token dari js-cookie, bukan dari next-auth
