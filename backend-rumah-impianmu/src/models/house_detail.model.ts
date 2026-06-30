@@ -6,6 +6,7 @@ export interface HouseDetailAttributes {
   id?: number;
   house_id: number;
   contact: string | null;
+  contact_name: string | null;
   description: string | null;
   image_1: string | null;
   image_2: string | null;
@@ -15,10 +16,10 @@ export interface HouseDetailAttributes {
 }
 
 class HouseDetail extends Model<HouseDetailAttributes> implements HouseDetailAttributes {
-  // UBAH SEMUA 'public' MENJADI 'declare'
   declare id: number;
   declare house_id: number;
   declare contact: string | null;
+  declare contact_name: string | null;
   declare description: string | null;
   declare image_1: string | null;
   declare image_2: string | null;
@@ -44,6 +45,7 @@ HouseDetail.init({
     onUpdate: 'CASCADE'
   },
   contact: DataTypes.STRING,
+  contact_name: DataTypes.STRING,
   description: {
     type: DataTypes.TEXT, 
   },
@@ -59,7 +61,6 @@ HouseDetail.init({
 });
 
 House.hasOne(HouseDetail, { foreignKey: 'house_id', onDelete: 'CASCADE' });
-
 HouseDetail.belongsTo(House, { foreignKey: 'house_id' });
 
 export default HouseDetail;

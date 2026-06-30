@@ -39,13 +39,7 @@ export default function ProfilePage() {
             <ArrowLeft size={16} />
             Kembali ke Beranda
           </Link>
-          
-          <h1 className="text-3xl lg:text-4xl font-bold tracking-tight text-slate-900">
-            Akun Saya
-          </h1>
-          <p className="text-slate-500 mt-2">
-            Kelola informasi profil dan preferensi properti Anda.
-          </p>
+        
         </div>
 
         {/* 2-Column Layout */}

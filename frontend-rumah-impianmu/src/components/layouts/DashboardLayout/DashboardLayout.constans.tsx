@@ -1,36 +1,41 @@
 import {
-  CiBookmark,
-  CiShoppingTag,
+  CiFolderOn,
   CiUser,
-  CiViewList,
+  CiHome,
   CiWallet,
 } from "react-icons/ci";
 
 const SIDEBAR_ADMIN = [
   {
     key: "house",
-    label: "house",
+    label: "Data Rumah",
     href: "/admin/house",
-    icon: <CiViewList />,
+    icon: <CiHome />,
   },
   {
-    key: "category",
-    label: "Category",
-    href: "/admin/category",
-    icon: <CiShoppingTag />,
+    key: "user",
+    label: "Data Pengguna",
+    href: "/admin/user",
+    icon: <CiFolderOn />,
   },
   {
-    key: "banner",
-    label: "Banner",
-    href: "/admin/banner",
-    icon: <CiBookmark />,
+    key: "user",
+    label: "Edit Profil Admin",
+    href: "/admin/user",
+    icon: <CiUser />,
   },
-  {
-    key: "transaction",
-    label: "Transaction",
-    href: "/admin/transaction",
-    icon: <CiWallet />,
-  },
+  // {
+  //   key: "banner",
+  //   label: "Banner",
+  //   href: "/admin/banner",
+  //   icon: <CiBookmark />,
+  // },
+  // {
+  //   key: "transaction",
+  //   label: "Transaction",
+  //   href: "/admin/transaction",
+  //   icon: <CiWallet />,
+  // },
 ];
 
 const SIDEBAR_MEMBER = [
@@ -44,7 +49,7 @@ const SIDEBAR_MEMBER = [
     key: "profile",
     label: "Profile",
     href: "/member/profile",
-    icon: <CiUser />,
+    icon: <CiFolderOn />,
   },
 ];
 

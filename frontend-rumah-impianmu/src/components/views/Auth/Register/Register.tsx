@@ -2,27 +2,41 @@ import React, { useState } from "react";
 import Head from "next/head";
 import Link from "next/link";
 import { Input, Button, Checkbox } from "@heroui/react";
-import { Building2, Mail, Lock, Eye, EyeOff, ArrowLeft, User, AtSign } from "lucide-react";
-import { useRegister } from "./useRegister"; 
+import {
+  Building2,
+  Mail,
+  Lock,
+  Eye,
+  EyeOff,
+  ArrowLeft,
+  User,
+  AtSign,
+} from "lucide-react";
+import { useRegister } from "./useRegister";
 
 export const Register = () => {
   // State untuk toggle visibilitas password secara independen
   const [isPasswordVisible, setIsPasswordVisible] = useState(false);
   const [isConfirmVisible, setIsConfirmVisible] = useState(false);
-  
-  const togglePasswordVisibility = () => setIsPasswordVisible(!isPasswordVisible);
+
+  const togglePasswordVisibility = () =>
+    setIsPasswordVisible(!isPasswordVisible);
   const toggleConfirmVisibility = () => setIsConfirmVisible(!isConfirmVisible);
-  
-  // Panggil variabel dan fungsi dari custom hook
-  const { 
-    fullName, setFullName, 
-    username, setUsername, 
-    email, setEmail, 
-    password, setPassword, 
-    confirmPassword, setConfirmPassword, 
-    isLoading, 
-    errorMsg, 
-    handleRegister 
+
+  const {
+    fullName,
+    setFullName,
+    username,
+    setUsername,
+    email,
+    setEmail,
+    password,
+    setPassword,
+    confirmPassword,
+    setConfirmPassword,
+    isLoading,
+    errorMsg,
+    handleRegister,
   } = useRegister();
 
   return (
@@ -33,13 +47,14 @@ export const Register = () => {
       </Head>
 
       <div className="min-h-screen flex bg-white font-sans text-slate-900">
-        
         {/* Kiri: Area Form Register (Scrollable untuk form panjang) */}
         <div className="w-full lg:w-1/2 flex flex-col justify-center items-center p-8 sm:p-12 relative overflow-y-auto">
-          
           {/* Tombol Kembali ke Beranda */}
           <div className="absolute top-8 left-8">
-            <Link href="/" className="flex items-center gap-2 text-sm text-slate-500 hover:text-blue-600 transition-colors font-medium">
+            <Link
+              href="/"
+              className="flex items-center gap-2 text-sm text-slate-500 hover:text-blue-600 transition-colors font-medium"
+            >
               <ArrowLeft size={16} />
               Kembali ke Beranda
             </Link>
@@ -56,7 +71,9 @@ export const Register = () => {
               <h1 className="text-3xl font-bold tracking-tight text-slate-900 mb-2">
                 Buat Akun Baru
               </h1>
-              <p className="text-slate-500">Bergabunglah dan temukan rumah impian Anda.</p>
+              <p className="text-slate-500">
+                Bergabunglah dan temukan rumah impian Anda.
+              </p>
             </div>
 
             <form className="flex flex-col gap-5" onSubmit={handleRegister}>
@@ -69,7 +86,7 @@ export const Register = () => {
 
               {/* Input Full Name */}
               <Input
-                type="text" 
+                type="text"
                 label="Nama Lengkap"
                 placeholder="Masukkan nama lengkap"
                 labelPlacement="outside"
@@ -80,13 +97,14 @@ export const Register = () => {
                 onChange={(e) => setFullName(e.target.value)}
                 classNames={{
                   label: "font-medium text-slate-700",
-                  inputWrapper: "bg-slate-50 border-slate-200 hover:border-blue-400 focus-within:!border-blue-600 focus-within:!bg-white shadow-sm h-12",
+                  inputWrapper:
+                    "bg-slate-50 border-slate-200 hover:border-blue-400 focus-within:!border-blue-600 focus-within:!bg-white shadow-sm h-12",
                 }}
               />
 
               {/* Input Username */}
               <Input
-                type="text" 
+                type="text"
                 label="Username"
                 placeholder="Pilih username"
                 labelPlacement="outside"
@@ -97,13 +115,14 @@ export const Register = () => {
                 onChange={(e) => setUsername(e.target.value)}
                 classNames={{
                   label: "font-medium text-slate-700",
-                  inputWrapper: "bg-slate-50 border-slate-200 hover:border-blue-400 focus-within:!border-blue-600 focus-within:!bg-white shadow-sm h-12",
+                  inputWrapper:
+                    "bg-slate-50 border-slate-200 hover:border-blue-400 focus-within:!border-blue-600 focus-within:!bg-white shadow-sm h-12",
                 }}
               />
 
               {/* Input Email */}
               <Input
-                type="email" 
+                type="email"
                 label="Email"
                 placeholder="contoh@email.com"
                 labelPlacement="outside"
@@ -114,7 +133,8 @@ export const Register = () => {
                 onChange={(e) => setEmail(e.target.value)}
                 classNames={{
                   label: "font-medium text-slate-700",
-                  inputWrapper: "bg-slate-50 border-slate-200 hover:border-blue-400 focus-within:!border-blue-600 focus-within:!bg-white shadow-sm h-12",
+                  inputWrapper:
+                    "bg-slate-50 border-slate-200 hover:border-blue-400 focus-within:!border-blue-600 focus-within:!bg-white shadow-sm h-12",
                 }}
               />
 
@@ -126,8 +146,16 @@ export const Register = () => {
                 labelPlacement="outside"
                 startContent={<Lock size={18} className="text-slate-400" />}
                 endContent={
-                  <button className="focus:outline-none" type="button" onClick={togglePasswordVisibility}>
-                    {isPasswordVisible ? <EyeOff size={18} className="text-slate-400" /> : <Eye size={18} className="text-slate-400" />}
+                  <button
+                    className="focus:outline-none"
+                    type="button"
+                    onClick={togglePasswordVisibility}
+                  >
+                    {isPasswordVisible ? (
+                      <EyeOff size={18} className="text-slate-400" />
+                    ) : (
+                      <Eye size={18} className="text-slate-400" />
+                    )}
                   </button>
                 }
                 variant="bordered"
@@ -136,7 +164,8 @@ export const Register = () => {
                 onChange={(e) => setPassword(e.target.value)}
                 classNames={{
                   label: "font-medium text-slate-700",
-                  inputWrapper: "bg-slate-50 border-slate-200 hover:border-blue-400 focus-within:!border-blue-600 focus-within:!bg-white shadow-sm h-12",
+                  inputWrapper:
+                    "bg-slate-50 border-slate-200 hover:border-blue-400 focus-within:!border-blue-600 focus-within:!bg-white shadow-sm h-12",
                 }}
               />
 
@@ -148,8 +177,16 @@ export const Register = () => {
                 labelPlacement="outside"
                 startContent={<Lock size={18} className="text-slate-400" />}
                 endContent={
-                  <button className="focus:outline-none" type="button" onClick={toggleConfirmVisibility}>
-                    {isConfirmVisible ? <EyeOff size={18} className="text-slate-400" /> : <Eye size={18} className="text-slate-400" />}
+                  <button
+                    className="focus:outline-none"
+                    type="button"
+                    onClick={toggleConfirmVisibility}
+                  >
+                    {isConfirmVisible ? (
+                      <EyeOff size={18} className="text-slate-400" />
+                    ) : (
+                      <Eye size={18} className="text-slate-400" />
+                    )}
                   </button>
                 }
                 variant="bordered"
@@ -158,21 +195,33 @@ export const Register = () => {
                 onChange={(e) => setConfirmPassword(e.target.value)}
                 classNames={{
                   label: "font-medium text-slate-700",
-                  inputWrapper: "bg-slate-50 border-slate-200 hover:border-blue-400 focus-within:!border-blue-600 focus-within:!bg-white shadow-sm h-12",
+                  inputWrapper:
+                    "bg-slate-50 border-slate-200 hover:border-blue-400 focus-within:!border-blue-600 focus-within:!bg-white shadow-sm h-12",
                 }}
               />
 
               {/* Terms and Conditions */}
               <div className="mt-2">
-                <Checkbox size="sm" classNames={{ label: "text-slate-600 text-sm leading-tight" }}>
-                  Saya setuju dengan <Link href="#" className="text-blue-600 hover:underline">Syarat & Ketentuan</Link> serta <Link href="#" className="text-blue-600 hover:underline">Kebijakan Privasi</Link>.
+                <Checkbox
+                  size="sm"
+                  classNames={{ label: "text-slate-600 text-sm leading-tight" }}
+                >
+                  Saya setuju dengan{" "}
+                  <Link href="#" className="text-blue-600 hover:underline">
+                    Syarat & Ketentuan
+                  </Link>{" "}
+                  serta{" "}
+                  <Link href="#" className="text-blue-600 hover:underline">
+                    Kebijakan Privasi
+                  </Link>
+                  .
                 </Checkbox>
               </div>
 
               {/* Submit Button */}
-              <Button 
+              <Button
                 type="submit"
-                color="primary" 
+                color="primary"
                 size="lg"
                 isLoading={isLoading}
                 className="w-full bg-blue-600 font-semibold text-md rounded-xl shadow-lg shadow-blue-500/30 hover:-translate-y-0.5 transition-transform mt-2"
@@ -183,7 +232,10 @@ export const Register = () => {
               {/* Link ke Login */}
               <p className="text-center text-sm text-slate-500 mt-4">
                 Sudah punya akun?{" "}
-                <Link href="/login" className="font-medium text-blue-600 hover:text-blue-700 transition-colors">
+                <Link
+                  href="/auth/login"
+                  className="font-medium text-blue-600 hover:text-blue-700 transition-colors"
+                >
                   Masuk di sini
                 </Link>
               </p>
@@ -193,10 +245,10 @@ export const Register = () => {
 
         {/* Kanan: Area Branding / Gambar */}
         <div className="hidden lg:flex lg:w-1/2 relative bg-slate-900 overflow-hidden">
-          <img 
-            src="https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?auto=format&fit=crop&q=80&w=2000" 
-            alt="Modern Villa" 
-            className="absolute inset-0 w-full h-full object-cover opacity-40 mix-blend-overlay" 
+          <img
+            src="https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?auto=format&fit=crop&q=80&w=2000"
+            alt="Modern Villa"
+            className="absolute inset-0 w-full h-full object-cover opacity-40 mix-blend-overlay"
           />
           <div className="absolute inset-0 bg-gradient-to-br from-blue-900/80 to-slate-900/90" />
           <div className="relative z-10 flex flex-col justify-center px-16 xl:px-24 w-full">
@@ -204,11 +256,11 @@ export const Register = () => {
               Langkah pertama menuju hunian impian Anda.
             </h2>
             <p className="text-lg text-blue-100 max-w-lg mb-12">
-              Daftar sekarang untuk menyimpan properti favorit, mengatur jadwal survei, dan berkomunikasi langsung dengan agen terbaik kami.
+              Daftar sekarang untuk menyimpan properti favorit, mengatur jadwal
+              survei, dan berkomunikasi langsung dengan agen terbaik kami.
             </p>
           </div>
         </div>
-
       </div>
     </>
   );
