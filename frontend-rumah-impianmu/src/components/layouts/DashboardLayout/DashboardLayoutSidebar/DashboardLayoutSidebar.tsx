@@ -60,7 +60,7 @@ const DashboardLayoutSidebar = (props: PropTypes) => {
           aria-label="Dashboard Menu"
           className="p-0 gap-2"
           classNames={{
-            list: "flex flex-col gap-2", // Menambahkan jarak antar menu
+            list: "flex flex-col gap-2",
           }}
         >
           {(item) => {

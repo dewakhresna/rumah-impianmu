@@ -1,9 +1,4 @@
-import {
-  CiFolderOn,
-  CiUser,
-  CiHome,
-  CiWallet,
-} from "react-icons/ci";
+import { CiFolderOn, CiUser, CiHome, CiWallet } from "react-icons/ci";
 
 const SIDEBAR_ADMIN = [
   {
@@ -21,7 +16,7 @@ const SIDEBAR_ADMIN = [
   {
     key: "user",
     label: "Edit Profil Admin",
-    href: "/admin/user",
+    href: "/admin/profil",
     icon: <CiUser />,
   },
   // {

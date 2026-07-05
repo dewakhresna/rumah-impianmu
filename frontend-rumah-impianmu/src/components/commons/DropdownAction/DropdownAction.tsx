@@ -33,7 +33,7 @@ const DropdownAction = (props: PropTypes) => {
         {!hideButtonDelete ? (
           <DropdownItem
             key="delete-event"
-            className="text-danger-500"
+            className="text-danger-600"
             onPress={onPressButtonDelete}
           >
             Delete

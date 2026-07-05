@@ -359,7 +359,7 @@ const AddHouseModal = (props: PropTypes) => {
               disabled={disabledSubmit}
               className="border-slate-200 text-slate-600 bg-white hover:bg-slate-50 font-medium rounded-xl px-6 transition-colors"
             >
-              Cancel
+              Batalkan
             </Button>
             <Button 
               type="submit" 

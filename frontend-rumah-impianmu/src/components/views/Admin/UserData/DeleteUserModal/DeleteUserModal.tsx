@@ -8,41 +8,40 @@ import {
   Spinner,
 } from "@heroui/react";
 import { Dispatch, SetStateAction, useEffect } from "react";
-import useDeleteHouseModal from "./useDeleteHouseModal";
+import useDeleteUserModal from "./useDeleteUserModal";
 
 interface PropTypes {
   isOpen: boolean;
   onClose: () => void;
   onOpenChange: () => void;
-  refetchHouse: () => void; // Diganti menjadi refetchHouse
+  refetchUser: () => void;
   selectedId: string;
   setSelectedId: Dispatch<SetStateAction<string>>;
 }
 
-const DeleteHouseModal = (props: PropTypes) => {
+const DeleteUserModal = (props: PropTypes) => {
   const {
     isOpen,
     onClose,
     onOpenChange,
     selectedId,
     setSelectedId,
-    refetchHouse,
+    refetchUser,
   } = props;
 
   const {
-    mutateDeleteHouse,
-    isPendingMutateDeleteHouse,
-    isSuccessMutateDeleteHouse,
-  } = useDeleteHouseModal();
+    mutateDeleteUser,
+    isPendingMutateDeleteUser,
+    isSuccessMutateDeleteUser,
+  } = useDeleteUserModal();
 
-  // Jika sukses dihapus: tutup modal, refresh tabel, kosongkan ID
   useEffect(() => {
-    if (isSuccessMutateDeleteHouse) {
+    if (isSuccessMutateDeleteUser) {
       onClose();
-      refetchHouse();
+      refetchUser();
       setSelectedId("");
     }
-  }, [isSuccessMutateDeleteHouse, onClose, refetchHouse, setSelectedId]);
+  }, [isSuccessMutateDeleteUser, onClose, refetchUser, setSelectedId]);
 
   return (
     <Modal
@@ -52,10 +51,10 @@ const DeleteHouseModal = (props: PropTypes) => {
       scrollBehavior="inside"
     >
       <ModalContent className="m-4">
-        <ModalHeader>Delete Home Data</ModalHeader>
+        <ModalHeader>Hapus Data Pengguna</ModalHeader> 
         <ModalBody>
           <p className="text-medium text-slate-700">
-            Are you sure you want to delete this property's data? This action cannot be undone.
+            Apakah Anda yakin ingin menghapus data pengguna ini? Tindakan ini tidak dapat dibatalkan.
           </p>
         </ModalBody>
         <ModalFooter>
@@ -65,17 +64,17 @@ const DeleteHouseModal = (props: PropTypes) => {
               onClose();
               setSelectedId("");
             }}
-            disabled={isPendingMutateDeleteHouse}
+            disabled={isPendingMutateDeleteUser}
           >
             Batalkan
           </Button>
           <Button
             color="danger"
             type="submit"
-            disabled={isPendingMutateDeleteHouse}
-            onPress={() => mutateDeleteHouse(selectedId)}
+            disabled={isPendingMutateDeleteUser}
+            onPress={() => mutateDeleteUser(selectedId)}
           >
-            {isPendingMutateDeleteHouse ? (
+            {isPendingMutateDeleteUser ? (
               <Spinner size="sm" color="white" />
             ) : (
               "Ya, Hapus Data"
@@ -87,4 +86,4 @@ const DeleteHouseModal = (props: PropTypes) => {
   );
 };
 
-export default DeleteHouseModal;
+export default DeleteUserModal;

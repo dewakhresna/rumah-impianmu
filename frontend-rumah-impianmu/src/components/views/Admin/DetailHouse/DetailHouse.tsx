@@ -1,7 +1,7 @@
 import { Tab, Tabs } from "@heroui/react";
 import useDetailHouse from "./useDetailHouse";
 import HouseData from "./HouseData";
-import HouseDetailTab from "./HouseDetailTab"; // 1. Import komponennya
+import HouseDetailTab from "./HouseDetailTab";
 
 const DetailHouse = () => {
   const {
@@ -18,7 +18,7 @@ const DetailHouse = () => {
 
   return (
     <div className="p-4">
-      <Tabs aria-label="Options" color="danger" variant="underlined">
+      <Tabs aria-label="Options" color="primary" variant="underlined">
         {/* TAB 1: DATA RUMAH (Kriteria SPK) */}
         <Tab key="info" title="Data Rumah">
           <HouseData

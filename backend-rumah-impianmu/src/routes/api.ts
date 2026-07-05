@@ -6,6 +6,7 @@ import authController from "../controllers/auth.controller.js";
 import houseDetailController from "../controllers/house_detail.controller.js";
 import uploadMiddleware from "../middlewares/upload.middleware.js";
 import uploadController from "../controllers/upload.controller.js";
+import userController from "../controllers/user.controller.js";
 
 const router = express.Router();
 
@@ -34,6 +35,13 @@ router.get(
 );
 router.put("/house-details/house/:house_id", houseDetailController.update);
 router.delete("/house-details/house/:house_id", houseDetailController.delete);
+
+// RUTE ADMIN EDIT USER
+router.get("/users", userController.getAll);
+router.get("/users/:id", userController.getById);
+router.put("/users/:id", userController.update);
+router.delete("/users/:id", userController.delete);
+
 
 // --- RUTE OTENTIKASI (USER) ---
 router.post("/auth/register", authController.register);
