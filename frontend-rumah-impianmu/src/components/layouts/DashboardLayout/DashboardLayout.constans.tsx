@@ -16,7 +16,7 @@ const SIDEBAR_ADMIN = [
   {
     key: "user",
     label: "Edit Profil Admin",
-    href: "/admin/profil",
+    href: "/admin/profile",
     icon: <CiUser />,
   },
   // {

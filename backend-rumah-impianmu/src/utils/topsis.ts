@@ -52,7 +52,7 @@ export const hitungTopsis = (data: Rumah[], bobotObj: any) => {
       );
 
       return {
-        ...row, // Ini akan menyalin semua isi data rumah (id, nama, c1_harga, dll)
+        ...row, // menyalin semua isi data rumah (id, nama, c1_harga, dll)
         skor: (dNeg / (dPos + dNeg)).toFixed(4),
       };
     })

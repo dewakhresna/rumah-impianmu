@@ -47,11 +47,11 @@ export default function AuthMenu() {
           </DropdownItem>
           
           <DropdownItem key="settings" href="/profile" as={Link}>
-            Profile Settings
+            Menu Profile
           </DropdownItem>
           
           <DropdownItem key="logout" color="danger" onPress={logout}>
-            Log Out
+            Keluar
           </DropdownItem>
         </DropdownMenu>
       </Dropdown>

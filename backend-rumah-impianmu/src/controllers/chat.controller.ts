@@ -65,7 +65,7 @@ export default {
 
       const hasil = hitungTopsis(dataRumah, bobotUser);
 
-      // 3. Respon
+      // Respon
       return res.status(200).json({
         status: "success",
         data: {
