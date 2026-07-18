@@ -11,18 +11,41 @@ import { IReqUser } from "../utils/interfaces.js";
 import response from "../utils/response.js";
 
 export default {
-  async updateProfile(req: IReqUser, res: Response) {
+async updateProfile(req: IReqUser, res: Response) {
     try {
       const userId = req.user?.id;
-      const { fullName, profilePicture } = req.body;
+      
+      const { fullName, username, email, profilePicture } = req.body;
 
-      // Update data
+      if (email) {
+        const checkEmail = await UserModel.findOne({
+          where: { 
+            email: email, 
+            id: { [Op.ne]: userId }
+          }
+        });
+        if (checkEmail) {
+          return response.error(res, null, "Email sudah digunakan oleh pengguna lain");
+        }
+      }
+
+      if (username) {
+        const checkUsername = await UserModel.findOne({
+          where: { 
+            username: username, 
+            id: { [Op.ne]: userId }
+          }
+        });
+        if (checkUsername) {
+          return response.error(res, null, "Username sudah digunakan oleh pengguna lain");
+        }
+      }
+
       await UserModel.update(
-        { fullName, profilePicture },
+        { fullName, username, email, profilePicture },
         { where: { id: userId } }
       );
 
-      // Ambil data terbaru
       const result = await UserModel.findByPk(userId);
 
       if (!result) return response.notFound(res, "user not found");

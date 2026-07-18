@@ -3,11 +3,12 @@
 import { Card, CardBody, Avatar, Button, Skeleton } from "@heroui/react";
 import { useAuth } from "@/hooks/useAuth";
 import Link from "next/link";
+import { useProfilePicture } from "@/hooks/useProfilePicture";
 
 export default function ProfileInfo() {
   const { user, isLoading, isLoggedIn } = useAuth();
+  const profileImageUrl = useProfilePicture(user?.profilePicture);
 
-  // 2. Tampilkan efek Loading (Skeleton) saat data sedang diambil
   if (isLoading) {
     return (
       <div className="flex flex-col items-center max-w-2xl mx-auto w-full">
@@ -34,11 +35,8 @@ export default function ProfileInfo() {
       <Card className="w-full bg-white rounded-2xl shadow-md border-none p-6 sm:p-10">
         <CardBody className="flex flex-col items-center text-center gap-6">
           <Avatar
-            src={
-              user.avatar ||
-              "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png"
-            }
-            name={user.name || "User"}
+            src={profileImageUrl}
+            name={user.name || user.fullName || "User"}
             className="w-32 h-32 text-large border-4 border-blue-50"
           />
 
