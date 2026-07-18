@@ -2,6 +2,7 @@ import { useState, useEffect, useContext } from "react";
 import instance from "@/libs/axios/instance";
 import { ToasterContext } from "@/contexts/ToasterContext";
 import useMediaHandling from "@/hooks/useMediaHandling"; 
+import { useRouter } from "next/navigation";
 
 interface FormData {
   fullName: string;
@@ -11,6 +12,7 @@ interface FormData {
 }
 
 export const useEditProfile = () => {
+  const router = useRouter();
   const [formData, setFormData] = useState<FormData>({
     fullName: "",
     username: "",
@@ -18,11 +20,13 @@ export const useEditProfile = () => {
     profilePicture: "user.jpg",
   });
 
+  const [originalPhoto, setOriginalPhoto] = useState<string>("user.jpg");
+
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [isSaving, setIsSaving] = useState<boolean>(false);
   const { setToaster } = useContext(ToasterContext);
 
-  const { handleUploadFile, isPendingMutateUploadFile } = useMediaHandling();
+  const { handleUploadFile, isPendingMutateUploadFile, handleDeleteFile } = useMediaHandling();
 
   const handleUploadPhoto = (files: FileList | null) => {
     if (!files || files.length === 0) return;
@@ -33,9 +37,13 @@ export const useEditProfile = () => {
       const finalUrl = typeof result === "string" ? result : result?.fileUrl;
 
       if (finalUrl) {
-        // perbarui preview gambar di antarmuka
+        const currentFormPhoto = formData.profilePicture;
+        
+        if (currentFormPhoto && currentFormPhoto !== originalPhoto && currentFormPhoto !== "user.jpg") {
+          handleDeleteFile(currentFormPhoto, () => {});
+        }
+
         setFormData((prev) => ({ ...prev, profilePicture: finalUrl }));
-        // setToaster({ type: "success", message: "Foto profil berhasil diunggah ke server!" });
       }
     });
   };
@@ -52,6 +60,8 @@ export const useEditProfile = () => {
             email: userData.email || "",
             profilePicture: userData.profilePicture || "user.jpg",
           });
+
+          setOriginalPhoto(userData.profilePicture || "user.jpg");
         }
       } catch (error: any) {
         setToaster({ type: "error", message: "Gagal memuat data pengguna." });
@@ -62,6 +72,23 @@ export const useEditProfile = () => {
 
     fetchUserData();
   }, [setToaster]);
+
+  useEffect(() => {
+    const handleBeforeUnload = (e: BeforeUnloadEvent) => {
+      const currentPhoto = formData.profilePicture;
+      
+      if (currentPhoto !== originalPhoto && currentPhoto !== "user.jpg") {
+        e.preventDefault();
+        e.returnValue = "Anda memiliki draf foto profil yang belum disimpan. Yakin ingin meninggalkan halaman?";
+      }
+    };
+
+    window.addEventListener("beforeunload", handleBeforeUnload);
+
+    return () => {
+      window.removeEventListener("beforeunload", handleBeforeUnload);
+    };
+  }, [formData.profilePicture, originalPhoto]);
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -74,9 +101,14 @@ export const useEditProfile = () => {
       const response = await instance.put("/auth/profile", formData);
       setToaster({ type: "success", message: "Profil berhasil diperbarui!" });
 
+      if (originalPhoto && originalPhoto !== formData.profilePicture && originalPhoto !== "user.jpg") {
+        handleDeleteFile(originalPhoto, () => {});
+      }
+
       const updatedUser = response.data?.data || response.data;
       if (updatedUser) {
         setFormData((prev) => ({ ...prev, ...updatedUser }));
+        setOriginalPhoto(updatedUser.profilePicture || "user.jpg");
       }
     } catch (error: any) {
       const errorMessage = error.response?.data?.message || "Terjadi kesalahan pada server.";
@@ -84,6 +116,13 @@ export const useEditProfile = () => {
     } finally {
       setIsSaving(false);
     }
+  };
+
+  const handleCancel = () => {
+    if (formData.profilePicture !== originalPhoto && formData.profilePicture !== "user.jpg") {
+      handleDeleteFile(formData.profilePicture, () => {});
+    }
+    router.push("/profile");
   };
 
   return {
@@ -94,5 +133,6 @@ export const useEditProfile = () => {
     handleInputChange,
     handleSaveChanges,
     handleUploadPhoto,
+    handleCancel,
   };
 };
