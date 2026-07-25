@@ -15,7 +15,6 @@ import {
 import { useRegister } from "./useRegister";
 
 export const Register = () => {
-  // State untuk toggle visibilitas password secara independen
   const [isPasswordVisible, setIsPasswordVisible] = useState(false);
   const [isConfirmVisible, setIsConfirmVisible] = useState(false);
 

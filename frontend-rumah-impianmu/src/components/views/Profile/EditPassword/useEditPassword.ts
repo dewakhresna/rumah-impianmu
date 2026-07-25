@@ -42,13 +42,12 @@ export const useEditPassword = () => {
 
     setIsSaving(true);
     try {
-      // Endpoint yang Anda buat di backend
       await instance.put("/auth/password", formData);
       
       setToaster({ type: "success", message: "Password berhasil diperbarui!" });
       
       setFormData({ oldPassword: "", password: "", confirmPassword: "" });
-      router.push("/profile");
+      router.push("/profile/edit-password");
       
     } catch (error: any) {
       const errorMessage = 

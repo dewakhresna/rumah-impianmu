@@ -58,6 +58,8 @@ router.get("/auth/me", authMiddleware, authController.me);
 router.put("/auth/profile", authMiddleware, authController.updateProfile);
 router.put("/auth/password", authMiddleware, authController.updatePassword);
 
+router.post("/auth/forgot-password", authController.forgotPassword);
+
 // --- RUTE UPLOAD FILE ---
 router.post(
   "/media/upload",

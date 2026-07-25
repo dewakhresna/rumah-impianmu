@@ -29,8 +29,17 @@ const transporter = nodemailer.createTransport({
   requireTLS: true,
 });
 
+transporter.verify(function (error, success) {
+  if (error) {
+    console.log("❌ Error Koneksi Email (SMTP):");
+    console.log(error);
+  } else {
+    console.log("✅ Server Email (SMTP) siap digunakan!");
+  }
+})
+
 export interface ISendMail {
-  from?: string; // Buat opsional jika ingin otomatis pakai EMAIL_SMTP_USER
+  from?: string;
   to: string;
   subject: string;
   html: string;
@@ -38,7 +47,7 @@ export interface ISendMail {
 
 export const sendMail = async ({ ...mailParams }: ISendMail) => {
   const result = await transporter.sendMail({
-    from: EMAIL_SMTP_USER, // Set default dari agar tidak perlu dikirim manual
+    from: EMAIL_SMTP_USER,
     ...mailParams,
   });
   return result;
@@ -48,7 +57,6 @@ export const renderMailHtml = async (
   template: string,
   data: any
 ): Promise<string> => {
-  // Sekarang __dirname sudah bisa digunakan dengan aman
   const content = await ejs.renderFile(
     path.join(__dirname, `templates/${template}`),
     data

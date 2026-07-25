@@ -1,8 +1,9 @@
 import { useState } from "react";
-import { useRouter } from "next/router"; // Gunakan next/navigation jika pakai App Router
+import { useRouter } from "next/router";
 import Cookies from "js-cookie";
 import { jwtDecode } from "jwt-decode";
 import authServices from "@/services/auth.service";
+import instance from "@/libs/axios/instance";
 
 export const useLogin = () => {
   const router = useRouter();
@@ -11,6 +12,11 @@ export const useLogin = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [errorMsg, setErrorMsg] = useState("");
 
+  const [isForgotModalOpen, setIsForgotModalOpen] = useState(false);
+  const [forgotEmail, setForgotEmail] = useState("");
+  const [isForgotLoading, setIsForgotLoading] = useState(false);
+  const [forgotMessage, setForgotMessage] = useState({ type: "", text: "" });
+
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsLoading(true);
@@ -18,27 +24,50 @@ export const useLogin = () => {
 
     try {
       const response = await authServices.login({ identifier, password });
-      
-      // Ambil token dari respons backend
-      const token = response.data.data; 
 
-      // Simpan token di Cookies. 
+      const token = response.data.data;
+
       Cookies.set("token", token, { expires: 1 });
 
-      // Decode token untuk melihat role
       const decoded: any = jwtDecode(token);
 
-      // Redirect otomatis sesuai role
       if (decoded.role === "admin") {
         router.push("/admin/house");
       } else {
-        router.push("/"); 
+        router.push("/");
       }
     } catch (error: any) {
-      const message = error.response?.data?.meta?.message || "Terjadi kesalahan pada server.";
+      const message =
+        error.response?.data?.meta?.message || "Terjadi kesalahan pada server.";
       setErrorMsg(message);
     } finally {
       setIsLoading(false);
+    }
+  };
+
+  const handleForgotPassword = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!forgotEmail) {
+      setForgotMessage({ type: "error", text: "Silakan masukkan email Anda." });
+      return;
+    }
+
+    setIsForgotLoading(true);
+    setForgotMessage({ type: "", text: "" });
+
+    try {
+      // Panggil endpoint forgot-password yang baru kita buat
+      const res = await instance.post("/auth/forgot-password", {
+        email: forgotEmail,
+      });
+      setForgotMessage({ type: "success", text: res.data.meta.message });
+      setForgotEmail(""); 
+    } catch (error: any) {
+      const message =
+        error.response?.data?.meta?.message || "Gagal mengirim email reset.";
+      setForgotMessage({ type: "error", text: message });
+    } finally {
+      setIsForgotLoading(false);
     }
   };
 
@@ -50,5 +79,13 @@ export const useLogin = () => {
     isLoading,
     errorMsg,
     handleLogin,
+    isForgotModalOpen,
+    setIsForgotModalOpen,
+    forgotEmail,
+    setForgotEmail,
+    isForgotLoading,
+    forgotMessage,
+    handleForgotPassword,
+    setForgotMessage,
   };
 };
