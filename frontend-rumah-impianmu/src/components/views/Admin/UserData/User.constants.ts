@@ -1,5 +1,4 @@
 const COLUMN_LISTS_USER = [
-  { name: "FOTO", uid: "profilePicture" },
   { name: "NAMA LENGKAP", uid: "fullName" },
   { name: "USERNAME", uid: "username" },
   { name: "EMAIL", uid: "email" },

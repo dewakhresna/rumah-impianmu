@@ -12,7 +12,8 @@ import {
 } from "@heroui/react";
 import { Bed, Bath, Maximize, MapPin, Heart } from "lucide-react";
 import { useListing, HouseData } from "./useListing";
-import { useRouter } from "next/navigation"; // 1. Tambahkan import useRouter
+import { useRouter } from "next/navigation";
+import instance from "@/libs/axios/instance";
 
 const formatRupiah = (angka: number) => {
   return new Intl.NumberFormat("id-ID", {
@@ -31,20 +32,53 @@ const getImageUrl = (imagePath?: string | null) => {
     return imagePath;
   }
 
-  const baseUrl =
-    environment.Domain?.replace(/\/$/, "") || "http://localhost:5000";
+  const baseUrl = environment.Domain?.replace(/\/$/, "") || "http://localhost:5000";
   return `${baseUrl}${imagePath}`;
 };
 
-function HouseCard({ house }: { house: HouseData }) {
+function HouseCard({ house, currentUserId }: { house: HouseData; currentUserId: number | null }) {
   const router = useRouter();
-  const [isFavorite, setIsFavorite] = useState(false);
+
+  // Inisialisasi state dari properti yang dikirim backend
+  const [isFavorite, setIsFavorite] = useState(house.isFavorite || false);
+  const [favoriteId, setFavoriteId] = useState<number | null>(house.favoriteId || null);
+  const [isLoadingFav, setIsLoadingFav] = useState(false);
 
   const imageUrl = getImageUrl(house.HouseDetail?.image_1);
-  const description =
-    house.HouseDetail?.description || "Deskripsi properti tidak tersedia.";
+  const description = house.HouseDetail?.description || "Deskripsi properti tidak tersedia.";
   const beds = house.HouseDetail?.beds || 0;
   const baths = house.HouseDetail?.baths || 0;
+
+  const handleFavoriteClick = async () => {
+    if (!currentUserId) {
+      alert("Silakan login terlebih dahulu untuk menyimpan properti impian Anda.");
+      router.push("/login");
+      return;
+    }
+
+    setIsLoadingFav(true);
+
+    try {
+      if (isFavorite && favoriteId) {
+        await instance.delete(`/favorites/${favoriteId}`);
+        setIsFavorite(false);
+        setFavoriteId(null);
+      } else {
+        const response = await instance.post("/favorites/create", {
+          user_id: currentUserId,
+          house_id: house.id,
+        });
+
+        setIsFavorite(true);
+        setFavoriteId(response.data.data.id);
+      }
+    } catch (error) {
+      console.error("Gagal mengubah status favorit:", error);
+      alert("Terjadi kesalahan jaringan saat menyimpan favorit.");
+    } finally {
+      setIsLoadingFav(false);
+    }
+  };
 
   return (
     <Card className="group border-none rounded-2xl shadow-sm hover:shadow-2xl hover:-translate-y-1 transition-all duration-300 bg-white">
@@ -84,21 +118,21 @@ function HouseCard({ house }: { house: HouseData }) {
         </div>
       </div>
       <CardFooter className="px-5 pb-5 pt-0 flex items-center gap-3">
-        {/* Favorite Button */}
+        {/* Favorite Button dihubungkan dengan handler */}
         <Button
           isIconOnly
           variant="bordered"
-          onPress={() => setIsFavorite(!isFavorite)}
+          onPress={handleFavoriteClick}
+          isLoading={isLoadingFav}
           className={`shrink-0 rounded-xl transition-all duration-300 h-12 w-12 ${
             isFavorite
               ? "border-red-200 bg-red-50 text-red-500 shadow-sm"
               : "border-slate-200 text-slate-400 hover:border-blue-400 hover:bg-blue-50 hover:text-blue-600"
           }`}
         >
-          <Heart size={20} className={isFavorite ? "fill-current" : ""} />
+          {!isLoadingFav && <Heart size={20} className={isFavorite ? "fill-current" : ""} />}
         </Button>
 
-        {/* View Details Button */}
         <Button
           onPress={() => router.push(`/listings/${house.id}`)}
           className="flex-1 h-12 bg-gradient-to-r from-blue-600 to-blue-700 text-white font-semibold rounded-xl shadow-md shadow-blue-500/20 hover:shadow-lg hover:shadow-blue-500/40 hover:-translate-y-0.5 transition-all duration-300"
@@ -111,7 +145,8 @@ function HouseCard({ house }: { house: HouseData }) {
 }
 
 export default function ListingGrid() {
-  const { houses, isLoading, error } = useListing();
+  // Ekstrak currentUserId dari hook
+  const { houses, isLoading, error, currentUserId } = useListing();
 
   if (isLoading) {
     return (
@@ -142,7 +177,6 @@ export default function ListingGrid() {
     );
   }
 
-  // 2. Tampilan saat terjadi error dari server
   if (error) {
     return (
       <div className="w-full p-10 text-center bg-red-50 rounded-2xl border border-red-100">
@@ -151,7 +185,6 @@ export default function ListingGrid() {
     );
   }
 
-  // 3. Tampilan saat data kosong (belum ada input dari admin)
   if (!houses || houses.length === 0) {
     return (
       <div className="w-full p-10 text-center bg-slate-50 rounded-2xl border border-slate-100">
@@ -162,11 +195,10 @@ export default function ListingGrid() {
     );
   }
 
-  // 4. Tampilan utama saat data berhasil dirender
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
       {houses.map((house) => (
-        <HouseCard key={house.id} house={house} />
+        <HouseCard key={house.id} house={house} currentUserId={currentUserId} />
       ))}
     </div>
   );

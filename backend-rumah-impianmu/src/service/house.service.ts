@@ -23,9 +23,8 @@ export default {
   },
 
   async getAllForChat() {
-    // Mengambil semua data murni tanpa limit dan pagination
     return await House.findAll({
-      raw: true, // Mengubah output menjadi JSON murni yang sangat ringan untuk dibaca AI
+      raw: true,
       order: [["id", "DESC"]],
     });
   },

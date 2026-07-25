@@ -1,11 +1,11 @@
 import DashboardLayout from "@/components/layouts/DashboardLayout";
-import Password from "@/components/views/Profile/EditPassword/EditPassword";
+import Password from "@/components/views/Admin/Profile/EditPassword/EditPassword";
 
 const AdminPasswordPage = () => {
   return (
     <DashboardLayout
-      title="EditPassword"
-      description="List of all Password, create new Password, and manage existing Passwords."
+      title="Edit Password"
+      description="Kelola Passwordmu"
       type="admin"
     >
       <Password />

@@ -5,27 +5,16 @@ import Link from "next/link";
 import { Card, Input, Button, Divider } from "@heroui/react";
 import { ArrowLeft, Lock, Eye, EyeOff } from "lucide-react";
 
-// Import hook yang baru dibuat
 import { useEditPassword } from "./useEditPassword";
 
 export default function ChangePasswordPage() {
   return (
     <main className="min-h-screen bg-slate-50 font-sans text-slate-900 flex justify-center py-12 px-4 sm:px-6 overflow-hidden">
       <div className="w-full max-w-[700px] flex flex-col gap-6 animate-in fade-in slide-in-from-bottom-4 duration-500">
-        
-        <div>
-          <Link 
-            href="/profile" 
-            className="inline-flex items-center gap-2 text-sm font-medium text-slate-500 hover:text-blue-600 transition-colors duration-300"
-          >
-            <ArrowLeft size={16} />
-            Back to Profile
-          </Link>
-        </div>
 
         <Card className="bg-white rounded-3xl shadow-sm border border-slate-200 p-6 sm:p-10 lg:p-12 transition-all duration-300">
           <PageHeader />
-          <EditPasswordContent /> {/* Dipisah agar bisa memakai hook dengan rapi */}
+          <EditPasswordContent />
         </Card>
 
       </div>
@@ -33,9 +22,6 @@ export default function ChangePasswordPage() {
   );
 }
 
-// ==========================================
-// KONTEN UTAMA (Tempat Hook Diinjeksi)
-// ==========================================
 const EditPasswordContent = () => {
   const { formData, isSaving, handleInputChange, handleSaveChanges, handleCancel } = useEditPassword();
 
@@ -47,9 +33,6 @@ const EditPasswordContent = () => {
   );
 };
 
-// ==========================================
-// HEADER SECTION
-// ==========================================
 const PageHeader = () => {
   return (
     <div className="flex flex-col gap-2">
@@ -67,9 +50,6 @@ const PageHeader = () => {
   );
 };
 
-// ==========================================
-// PASSWORD FORM INPUTS
-// ==========================================
 const PasswordForm = ({ formData, onChange }: { formData: any, onChange: (e: React.ChangeEvent<HTMLInputElement>) => void }) => {
   const [isVisibleCurrent, setIsVisibleCurrent] = useState(false);
   const [isVisibleNew, setIsVisibleNew] = useState(false);
@@ -90,7 +70,7 @@ const PasswordForm = ({ formData, onChange }: { formData: any, onChange: (e: Rea
       
       <Input
         label="Current Password"
-        name="oldPassword" // Sesuaikan dengan payload backend
+        name="oldPassword"
         value={formData.oldPassword}
         onChange={onChange}
         labelPlacement="outside"
@@ -112,7 +92,7 @@ const PasswordForm = ({ formData, onChange }: { formData: any, onChange: (e: Rea
 
       <Input
         label="New Password"
-        name="password" // Sesuaikan dengan payload backend
+        name="password"
         value={formData.password}
         onChange={onChange}
         labelPlacement="outside"
@@ -134,7 +114,7 @@ const PasswordForm = ({ formData, onChange }: { formData: any, onChange: (e: Rea
 
       <Input
         label="Confirm New Password"
-        name="confirmPassword" // Sesuaikan dengan payload backend
+        name="confirmPassword"
         value={formData.confirmPassword}
         onChange={onChange}
         labelPlacement="outside"
@@ -157,9 +137,6 @@ const PasswordForm = ({ formData, onChange }: { formData: any, onChange: (e: Rea
   );
 };
 
-// ==========================================
-// ACTION BUTTONS
-// ==========================================
 const ActionButtons = ({ onSave, onCancel, isSaving }: { onSave: () => void, onCancel: () => void, isSaving: boolean }) => {
   return (
     <div className="flex flex-col gap-6 mt-2">

@@ -4,8 +4,8 @@ import EditProfile from "@/components/views/Admin/Profile/EditProfile/EditProfil
 const AdminEditProfilePage = () => {
   return (
     <DashboardLayout
-      title="EditProfile"
-      description="List of all EditProfile, create new EditProfile, and manage existing EditProfiles."
+      title="Edit Profil"
+      description="Kelola data dirimu"
       type="admin"
     >
       <EditProfile />

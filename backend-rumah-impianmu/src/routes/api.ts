@@ -7,6 +7,7 @@ import houseDetailController from "../controllers/house_detail.controller.js";
 import uploadMiddleware from "../middlewares/upload.middleware.js";
 import uploadController from "../controllers/upload.controller.js";
 import userController from "../controllers/user.controller.js";
+import favoriteController from "../controllers/favorite.controller.js";
 
 const router = express.Router();
 
@@ -42,6 +43,10 @@ router.get("/users/:id", userController.getById);
 router.put("/users/:id", userController.update);
 router.delete("/users/:id", userController.delete);
 
+// --- RUTE FAVORITE ---
+router.post("/favorites/create", favoriteController.create);
+router.get("/favorites", favoriteController.getAll);
+router.delete("/favorites/:id", favoriteController.delete);
 
 // --- RUTE OTENTIKASI (USER) ---
 router.post("/auth/register", authController.register);

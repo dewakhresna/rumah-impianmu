@@ -59,17 +59,19 @@ export default function ProfileInfo() {
           <div className="flex flex-col sm:flex-row gap-4 w-full sm:w-auto mt-4">
             <Button
               as={Link}
-              href="admin/profile/edit-profile"
+              href="/admin/profile/edit-profile"
               color="primary"
               className="bg-blue-600 font-medium px-8 rounded-xl shadow-lg shadow-blue-500/30 hover:-translate-y-0.5 transition-transform"
             >
               Edit Data Diri
             </Button>
             <Button
+              as={Link}
+              href="/admin/profile/edit-password"
               variant="bordered"
               className="border-slate-200 text-slate-700 font-medium px-8 rounded-xl hover:bg-slate-50 hover:border-blue-200 transition-colors"
             >
-              Change Password
+              Edit Password
             </Button>
           </div>
         </CardBody>

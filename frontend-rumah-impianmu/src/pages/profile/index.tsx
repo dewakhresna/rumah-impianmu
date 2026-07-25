@@ -5,9 +5,8 @@ import Link from "next/link";
 import { ArrowLeft } from "lucide-react";
 import SidebarProfile from "@/components/views/Profile/SidebarProfile";
 import ProfileInfo from "@/components/views/Profile/ProfileInfo";
-import FavoriteList from "@/components/views/Profile/FavoriteList";
+import FavoriteList from "@/components/views/Profile/Favorite/FavoriteList";
 import LogoutSection from "@/components/views/Profile/LogoutSection";
-import { currentUser, favoriteHouses } from "@/data/dummyProfile";
 
 export default function ProfilePage() {
   const [activeTab, setActiveTab] = useState("data-diri");
@@ -18,7 +17,7 @@ export default function ProfilePage() {
       case "data-diri":
         return <ProfileInfo />;
       case "favorit":
-        return <FavoriteList houses={favoriteHouses} />;
+        return <FavoriteList/>;
       case "logout":
         return <LogoutSection />;
       default:
