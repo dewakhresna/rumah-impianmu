@@ -18,6 +18,22 @@ export function useChat() {
   const [currentUserId, setCurrentUserId] = useState<number | null>(null);
   const [userFavorites, setUserFavorites] = useState<any[]>([]);
 
+  const [isMounted, setIsMounted] = useState(false);
+
+  useEffect(() => {
+    setIsMounted(true);
+    const savedChat = localStorage.getItem("chat_history");
+    if (savedChat) {
+      setMessages(JSON.parse(savedChat));
+    }
+  }, []);
+
+  useEffect(() => {
+    if (isMounted) {
+      localStorage.setItem("chat_history", JSON.stringify(messages));
+    }
+  }, [messages, isMounted]);
+
   useEffect(() => {
     const fetchUserData = async () => {
       try {
@@ -67,7 +83,6 @@ export function useChat() {
         console.error("Gagal sinkronisasi favorit di chat:", error);
       }
     };
-
 
     window.addEventListener("favoriteChanged", syncChatFavorites);
     return () =>

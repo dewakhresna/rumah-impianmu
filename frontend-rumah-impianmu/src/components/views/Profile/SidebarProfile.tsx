@@ -11,7 +11,6 @@ interface SidebarProps {
 }
 
 export default function SidebarProfile({ activeTab, setActiveTab }: SidebarProps) {
-  // 1. Panggil hook otentikasi dan logout
   const { user, isLoading } = useAuth();
   const logout = useLogout();
 

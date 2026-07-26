@@ -24,8 +24,12 @@ export default {
 
   async getAllForChat() {
     return await House.findAll({
-      raw: true,
       order: [["id", "DESC"]],
+      include: [
+        {
+          model: HouseDetail,
+        },
+      ],
     });
   },
 

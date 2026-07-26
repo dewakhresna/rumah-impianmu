@@ -43,6 +43,15 @@ function ChatHouseCard({
   );
   const [isLoadingFav, setIsLoadingFav] = useState(false);
 
+  const formatWhatsAppLink = (number?: string | null) => {
+    if (!number) return "#";
+    let formattedNumber = number.replace(/\D/g, "");
+    if (formattedNumber.startsWith("0")) {
+      formattedNumber = "62" + formattedNumber.substring(1);
+    }
+    return `https://wa.me/${formattedNumber}`;
+  };
+
   useEffect(() => {
     setIsFavorite(house.isFavorite || false);
     setFavoriteId(house.favoriteId || null);
@@ -73,7 +82,6 @@ function ChatHouseCard({
       }
 
       window.dispatchEvent(new Event("favoriteChanged"));
-
     } catch (error) {
       console.error("Gagal mengubah status favorit:", error);
       alert("Terjadi kesalahan jaringan saat menyimpan favorit.");
@@ -123,16 +131,21 @@ function ChatHouseCard({
       <CardFooter className="px-4 pb-4 pt-0 flex flex-col gap-2">
         <div className="flex w-full items-center gap-2">
           <Button
+            as="a"
+            href={formatWhatsAppLink(
+              house.HouseDetail?.contact || house.contact,
+            )}
+            target="_blank"
+            rel="noopener noreferrer"
             size="sm"
             variant="bordered"
             color="primary"
             className="font-medium flex-1 rounded-lg border-slate-200 text-slate-700 hover:border-blue-600 hover:text-blue-600 transition-colors"
             startContent={<MessageCircle size={16} />}
           >
-            Tanya
+            Chat Sekarang
           </Button>
 
-          {/* Tombol Favorit Interaktif */}
           <Button
             isIconOnly
             size="sm"

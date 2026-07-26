@@ -4,6 +4,8 @@ export interface Rumah {
   c2_jarak: number;
   c3_keamanan: number;
   c4_luas: number;
+  HouseDetail?: any; 
+  imageUrl?: string;
 }
 
 export const hitungTopsis = (data: Rumah[], bobotObj: any) => {

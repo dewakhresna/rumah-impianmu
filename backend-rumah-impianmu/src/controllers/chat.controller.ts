@@ -19,13 +19,15 @@ export default {
 
       const rawData = await HouseService.getAllForChat();
 
-      const dataRumah: Rumah[] = rawData.map((r) => ({
+      const dataRumah: Rumah[] = rawData.map((r: any) => ({
         id: r.id,
         nama: r.nama ?? "Tanpa Nama",
         c1_harga: r.c1_harga ?? 0,
         c2_jarak: r.c2_jarak ?? 0,
         c3_keamanan: r.c3_keamanan ?? 0,
         c4_luas: r.c4_luas ?? 0,
+        HouseDetail: r.HouseDetail, 
+        imageUrl: r.HouseDetail?.image_1,
       }));
 
       if (dataRumah.length === 0) {
