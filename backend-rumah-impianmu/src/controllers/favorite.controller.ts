@@ -7,7 +7,6 @@ export default {
       const page = Number(req.query.page) || 1;
       const limit = Number(req.query.limit) || 10;
       
-      // Mengambil userId dari query params (atau bisa disesuaikan jika Anda memakai req.user dari middleware otentikasi)
       const userId = Number(req.query.userId);
 
       if (!userId) {
@@ -17,7 +16,6 @@ export default {
         });
       }
 
-      // Mengambil data favorit khusus untuk user tersebut
       const result = await FavoriteService.findAllByUser(userId, page, limit);
       const totalPages = Math.ceil(result.count / limit);
 
@@ -46,7 +44,6 @@ export default {
     try {
       const { user_id, house_id } = req.body;
 
-      // Validasi sederhana memastikan ID dikirimkan
       if (!user_id || !house_id) {
         return res.status(400).json({
           meta: { status: 400, message: "user_id and house_id are required" },

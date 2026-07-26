@@ -10,7 +10,6 @@ export default function LiveChat() {
     <div className="sticky top-28 h-[calc(100vh-8rem)] min-h-[500px] max-h-[700px]">
       <Card className="flex h-full flex-col rounded-2xl border border-slate-100 bg-white shadow-xl shadow-slate-200/50">
         
-        {/* Chat Header */}
         <CardHeader className="flex items-center gap-4 rounded-t-2xl bg-blue-600 px-6 py-4">
           <div className="relative">
             <Avatar src="https://i.pravatar.cc/150?u=a042581f4e29026704d" size="md" />
@@ -22,7 +21,6 @@ export default function LiveChat() {
           </div>
         </CardHeader>
 
-        {/* Chat Body */}
         <CardBody className="flex flex-1 flex-col gap-4 overflow-y-auto bg-slate-50 p-6">
           <p className="mb-2 text-center text-xs text-slate-400">Hari ini</p>
           
@@ -42,7 +40,6 @@ export default function LiveChat() {
           <div ref={messagesEndRef} />
         </CardBody>
 
-        {/* Chat Input */}
         <CardFooter className="rounded-b-2xl border-t border-slate-100 bg-white p-4">
           <form className="flex w-full items-end gap-2" onSubmit={handleSendMessage}>
             <Input

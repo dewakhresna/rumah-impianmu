@@ -20,7 +20,6 @@ const useDeleteHouseModal = () => {
     onError: (error: any) => {
       setToaster({
         type: "error",
-        // Mengambil pesan error dari format meta backend kita
         message: error.response?.data?.meta?.message || "Failed to delete data",
       });
     },

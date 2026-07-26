@@ -46,14 +46,12 @@ export default {
   },
 
   async update(id: number, data: Partial<HouseAttributes>) {
-    // Sequelize update mengembalikan array, contoh: [1] jika berhasil, [0] jika gagal
     return await House.update(data, {
       where: { id },
     });
   },
 
   async delete(id: number) {
-    // Sequelize destroy mengembalikan jumlah baris yang terhapus (1 atau 0)
     return await House.destroy({
       where: { id },
     });

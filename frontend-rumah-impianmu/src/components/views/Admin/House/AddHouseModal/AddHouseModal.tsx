@@ -44,7 +44,6 @@ const AddHouseModal = (props: PropTypes) => {
 
   const disabledSubmit = isPendingMutateAddHouse;
 
-  // Reusable input styling for premium SaaS look
   const customInputClasses = {
     inputWrapper:
       "bg-white border-slate-200 shadow-sm hover:border-blue-400 focus-within:!border-blue-500 focus-within:!ring-2 focus-within:!ring-blue-100 transition-all duration-300 rounded-xl",

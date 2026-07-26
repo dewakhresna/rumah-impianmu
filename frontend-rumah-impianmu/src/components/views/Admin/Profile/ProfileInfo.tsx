@@ -7,7 +7,6 @@ import Link from "next/link";
 export default function ProfileInfo() {
   const { user, isLoading, isLoggedIn } = useAuth();
 
-  // 2. Tampilkan efek Loading (Skeleton) saat data sedang diambil
   if (isLoading) {
     return (
       <div className="flex flex-col items-center max-w-2xl mx-auto w-full">

@@ -26,6 +26,8 @@ export const Login = () => {
     isLoading,
     errorMsg,
     handleLogin,
+    rememberMe,
+    setRememberMe,
     isForgotModalOpen,
     setIsForgotModalOpen,
     forgotEmail,
@@ -127,6 +129,8 @@ export const Login = () => {
               <div className="flex items-center justify-between mt-2">
                 <Checkbox
                   size="sm"
+                  isSelected={rememberMe}
+                  onValueChange={setRememberMe}
                   classNames={{ label: "text-slate-600 text-sm" }}
                 >
                   Ingat saya

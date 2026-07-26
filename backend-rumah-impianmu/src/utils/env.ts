@@ -14,3 +14,9 @@ export const EMAIL_SMTP_SERVICE_NAME: string =
   process.env.EMAIL_SMTP_SERVICE_NAME || "";
 export const CLIENT_HOST: string =
   process.env.CLIENT_HOST || "http://localhost:3001";
+
+export const GROQ_API_KEY = process.env.GROQ_API_KEY || "secret";
+export const DB_NAME = process.env.DB_NAME || "DB_NAME";
+export const DB_USER = process.env.DB_USER || "DB_USER";
+export const DB_PASS = process.env.DB_PASS || "DB_PASS";
+export const DB_HOST = process.env.DB_HOST || "DB_HOST";

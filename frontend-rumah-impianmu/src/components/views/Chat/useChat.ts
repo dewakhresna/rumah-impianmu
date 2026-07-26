@@ -41,7 +41,7 @@ export function useChat() {
           id: Date.now() + 1, 
           role: "admin", 
           text: "Berikut adalah rekomendasi rumah terbaik berdasarkan kriteria Anda:",
-          houses: daftarRekomendasi, // Lempar array langsung ke komponen
+          houses: daftarRekomendasi, 
           outroText: "Apakah ada kriteria lain yang ingin Anda ubah?"
         },
       ]);

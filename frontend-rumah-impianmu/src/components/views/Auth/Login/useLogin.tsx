@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useRouter } from "next/router";
 import Cookies from "js-cookie";
 import { jwtDecode } from "jwt-decode";
@@ -12,10 +12,20 @@ export const useLogin = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [errorMsg, setErrorMsg] = useState("");
 
+  const [rememberMe, setRememberMe] = useState(false);
+
   const [isForgotModalOpen, setIsForgotModalOpen] = useState(false);
   const [forgotEmail, setForgotEmail] = useState("");
   const [isForgotLoading, setIsForgotLoading] = useState(false);
   const [forgotMessage, setForgotMessage] = useState({ type: "", text: "" });
+
+  useEffect(() => {
+    const savedIdentifier = localStorage.getItem("rememberedIdentifier");
+    if (savedIdentifier) {
+      setIdentifier(savedIdentifier);
+      setRememberMe(true);
+    }
+  }, []);
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -24,13 +34,18 @@ export const useLogin = () => {
 
     try {
       const response = await authServices.login({ identifier, password });
-
       const token = response.data.data;
 
-      Cookies.set("token", token, { expires: 1 });
+      const expirationDays = rememberMe ? 30 : 1;
+      Cookies.set("token", token, { expires: expirationDays });
+
+      if (rememberMe) {
+        localStorage.setItem("rememberedIdentifier", identifier);
+      } else {
+        localStorage.removeItem("rememberedIdentifier");
+      }
 
       const decoded: any = jwtDecode(token);
-
       if (decoded.role === "admin") {
         router.push("/admin/house");
       } else {
@@ -51,17 +66,14 @@ export const useLogin = () => {
       setForgotMessage({ type: "error", text: "Silakan masukkan email Anda." });
       return;
     }
-
     setIsForgotLoading(true);
     setForgotMessage({ type: "", text: "" });
-
     try {
-      // Panggil endpoint forgot-password yang baru kita buat
       const res = await instance.post("/auth/forgot-password", {
         email: forgotEmail,
       });
       setForgotMessage({ type: "success", text: res.data.meta.message });
-      setForgotEmail(""); 
+      setForgotEmail("");
     } catch (error: any) {
       const message =
         error.response?.data?.meta?.message || "Gagal mengirim email reset.";
@@ -79,6 +91,8 @@ export const useLogin = () => {
     isLoading,
     errorMsg,
     handleLogin,
+    rememberMe,
+    setRememberMe,
     isForgotModalOpen,
     setIsForgotModalOpen,
     forgotEmail,

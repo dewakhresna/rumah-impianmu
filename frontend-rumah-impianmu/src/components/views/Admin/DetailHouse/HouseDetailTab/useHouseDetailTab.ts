@@ -3,7 +3,6 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import { useForm } from "react-hook-form";
 import * as yup from "yup";
 
-// Skema validasi untuk detail rumah
 const schema = yup.object().shape({
   contact: yup.string().required("Kontak pemilik/agen wajib diisi"),
   description: yup.string().required("Deskripsi wajib diisi"),
@@ -34,27 +33,21 @@ const useHouseDetailTab = () => {
     resolver: yupResolver(schema),
   });
 
-  // Pantau perubahan preview untuk masing-masing gambar
   const preview1 = watch("image_1");
   const preview2 = watch("image_2");
   const preview3 = watch("image_3");
 
-  // Handler dinamis untuk mengunggah gambar berdasarkan nama field (image_1, image_2, atau image_3)
 const handleUploadImage = (
     fieldName: "image_1" | "image_2" | "image_3",
     files: FileList,
     onChange: (...event: any[]) => void
   ) => {
     handleUploadFile(files, onChange, (result: any) => {
-      // 1. Ekstrak string URL-nya dengan aman. 
-      // Mengantisipasi jika useMediaHandling mengembalikan object { fileUrl: "..." }
       const finalUrl = typeof result === "string" ? result : result?.fileUrl;
 
       if (finalUrl) {
-        // 2. Paksa komponen InputFile menyimpan Teks URL, bukan lagi FileList
         onChange(finalUrl);
         
-        // 3. Paksa sinkronisasi nilai form untuk persiapan Submit
         setValue(fieldName, finalUrl, { 
           shouldValidate: true, 
           shouldDirty: true 
@@ -63,7 +56,7 @@ const handleUploadImage = (
     });
   };
 
-  // Handler dinamis untuk menghapus gambar
+
   const handleDeleteImage = (
     fieldName: "image_1" | "image_2" | "image_3",
     onChange: (files: FileList | undefined) => void
@@ -71,7 +64,7 @@ const handleUploadImage = (
     const fileUrl = getValues(fieldName) as string;
     handleDeleteFile(fileUrl, () => {
       onChange(undefined);
-      setValue(fieldName, ""); // Kosongkan URL di form
+      setValue(fieldName, "");
     });
   };
 

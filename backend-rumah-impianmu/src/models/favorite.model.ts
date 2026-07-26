@@ -29,7 +29,7 @@ Favorite.init({
     type: DataTypes.INTEGER,
     allowNull: false,
     references: {
-      model: 'users', // Sesuaikan dengan nama tabel user di database Anda
+      model: 'users',
       key: 'id'
     }
   },
@@ -37,7 +37,7 @@ Favorite.init({
     type: DataTypes.INTEGER,
     allowNull: false,
     references: {
-      model: 'houses', // Merujuk ke tabel houses
+      model: 'houses',
       key: 'id'
     }
   },

@@ -11,11 +11,9 @@ export default {
       limit: limit,
       offset: offset,
       order: [["id", "DESC"]],
-      // Melakukan JOIN ke tabel House agar data rumah langsung didapatkan
       include: [
         {
           model: House,
-          // Jika Anda juga butuh detail rumahnya di halaman favorit, Anda bisa melakukan nested include
           include: [
             {
               model: HouseDetail,
@@ -28,8 +26,6 @@ export default {
     return { count, rows };
   },
 
-  // Opsional: Berguna jika Anda ingin mengecek apakah user sudah memfavoritkan rumah ini
-  // agar tidak terjadi duplikasi data saat user menekan tombol "Like" berkali-kali
   async findByUserAndHouse(userId: number, houseId: number) {
     return await Favorite.findOne({
       where: {
@@ -44,7 +40,6 @@ export default {
   },
 
   async delete(id: number) {
-    // Sequelize destroy mengembalikan jumlah baris yang terhapus (1 atau 0)
     return await Favorite.destroy({
       where: { id },
     });

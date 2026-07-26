@@ -1,14 +1,35 @@
+"use client";
+
+import { useState } from "react";
+import { useRouter } from "next/navigation";
 import { Card, CardBody, Avatar, Button, Divider } from "@heroui/react";
-import { MessageSquare, Phone, Calendar, Heart } from "lucide-react";
+import { MessageSquare, Heart } from "lucide-react";
+import instance from "@/libs/axios/instance";
 
 interface ContactCardProps {
+  houseId?: number;
   contact?: string | null;
   contactName?: string | null;
+  currentUserId?: number | null;
+  initialIsFavorite?: boolean;
+  initialFavoriteId?: number | null;
 }
 
-export default function ContactCard({ contact, contactName }: ContactCardProps) {
+export default function ContactCard({ 
+  houseId,
+  contact, 
+  contactName, 
+  currentUserId,
+  initialIsFavorite = false,
+  initialFavoriteId = null
+}: ContactCardProps) {
   
-  // Helper untuk memformat nomor telepon
+  const router = useRouter();
+
+  const [isFavorite, setIsFavorite] = useState(initialIsFavorite);
+  const [favoriteId, setFavoriteId] = useState<number | null>(initialFavoriteId);
+  const [isLoadingFav, setIsLoadingFav] = useState(false);
+
   const formatWhatsAppLink = (number?: string | null) => {
     if (!number) return "#";
     let formattedNumber = number.replace(/\D/g, ""); 
@@ -18,6 +39,39 @@ export default function ContactCard({ contact, contactName }: ContactCardProps) 
     return `https://wa.me/${formattedNumber}`;
   };
 
+  const handleFavoriteClick = async () => {
+    if (!currentUserId) {
+      alert("Silakan login terlebih dahulu untuk menyimpan properti impian Anda.");
+      router.push("/auth/login");
+      return;
+    }
+
+    if (!houseId) return;
+
+    setIsLoadingFav(true);
+
+    try {
+      if (isFavorite && favoriteId) {
+        await instance.delete(`/favorites/${favoriteId}`);
+        setIsFavorite(false);
+        setFavoriteId(null);
+      } else {
+        const response = await instance.post("/favorites/create", {
+          user_id: currentUserId,
+          house_id: houseId,
+        });
+
+        setIsFavorite(true);
+        setFavoriteId(response.data.data.id);
+      }
+    } catch (error) {
+      console.error("Gagal mengubah status favorit:", error);
+      alert("Terjadi kesalahan jaringan saat menyimpan favorit.");
+    } finally {
+      setIsLoadingFav(false);
+    }
+  };
+
   return (
     <Card className="w-full bg-white rounded-2xl shadow-xl shadow-slate-200/50 border border-slate-100 sticky top-28">
       <CardBody className="p-6 md:p-8 flex flex-col gap-6">
@@ -25,7 +79,6 @@ export default function ContactCard({ contact, contactName }: ContactCardProps) 
         {/* Agent Info */}
         <div className="flex items-center gap-4">
           <div className="relative">
-            {/* Avatar dari HeroUI bisa menggunakan 'name' untuk membuat inisial otomatis jika tidak ada foto */}
             <Avatar 
               showFallback 
               name={contactName || "A P"} 
@@ -36,7 +89,6 @@ export default function ContactCard({ contact, contactName }: ContactCardProps) 
           </div>
           <div>
             <p className="text-xs font-semibold text-slate-400 uppercase tracking-wider mb-0.5">Agen Properti</p>
-            {/* Menampilkan nama agen */}
             <h4 className="text-lg font-bold text-slate-900 leading-tight">
               {contactName || "Agen EstatePrime"}
             </h4>
@@ -62,35 +114,22 @@ export default function ContactCard({ contact, contactName }: ContactCardProps) 
           </Button>
           
           <div className="flex gap-3">
-            {/* <Button 
-              as="a"
-              href={`tel:${contact || ""}`}
-              variant="bordered" 
-              size="lg"
-              className="flex-1 font-semibold rounded-xl border-slate-200 text-slate-700 hover:border-blue-600 hover:text-blue-600 transition-colors"
-              startContent={<Phone size={18} />}
-            >
-              Telepon
-            </Button> */}
             <Button 
-              isIconOnly 
-              variant="flat" 
+              variant={isFavorite ? "solid" : "flat"} 
               color="danger"
               size="lg"
-              className="w-full bg-red-50 text-red-500 rounded-xl shrink-0 hover:bg-red-200 transition-colors"
+              onPress={handleFavoriteClick}
+              isLoading={isLoadingFav}
+              className={`w-full rounded-xl shrink-0 transition-colors ${
+                isFavorite 
+                  ? "bg-red-500 text-white hover:bg-red-600" 
+                  : "bg-red-50 text-red-500 hover:bg-red-100"
+              }`}
             >
-              <Heart size={22} />
-              Tambah Favorit
+              {!isLoadingFav && <Heart size={22} className={isFavorite ? "fill-current" : ""} />}
+              {isFavorite ? "Hapus Favorit" : "Tambah Favorit"}
             </Button>
           </div>
-
-          <Button 
-            variant="light" 
-            className="w-full mt-2 text-slate-500 font-medium hover:bg-slate-50"
-            startContent={<Calendar size={18} />}
-          >
-            Jadwalkan Survei Lokasi
-          </Button>
         </div>
 
       </CardBody>

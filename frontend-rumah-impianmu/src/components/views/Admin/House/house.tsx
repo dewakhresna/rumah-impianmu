@@ -77,7 +77,7 @@ const House = () => {
 
       <AddHouseModal {...addCategoryModal} refetchHouse={refetchHouse} />
       <DeleteHouseModal
-        {...deleteCategoryModal} // Memakai state dari baris 26 (const deleteCategoryModal = useDisclosure();)
+        {...deleteCategoryModal}
         selectedId={selectedId}
         setSelectedId={setSelectedId}
         refetchHouse={refetchHouse}

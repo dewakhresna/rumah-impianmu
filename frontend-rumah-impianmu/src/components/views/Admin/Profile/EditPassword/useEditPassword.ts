@@ -27,7 +27,6 @@ export const useEditPassword = () => {
   };
 
   const handleSaveChanges = async () => {
-    // Validasi dasar di frontend sebelum dikirim ke backend
     if (!formData.oldPassword || !formData.password || !formData.confirmPassword) {
       setToaster({ type: "error", message: "Semua kolom password wajib diisi." });
       return;

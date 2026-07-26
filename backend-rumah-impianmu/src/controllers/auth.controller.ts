@@ -76,7 +76,6 @@ async updateProfile(req: IReqUser, res: Response) {
         return response.notFound(res, "user not found or wrong password");
       }
 
-      // Update password
       await UserModel.update(
         { password: encrypt(password) },
         { where: { id: userId } }
@@ -133,7 +132,6 @@ async updateProfile(req: IReqUser, res: Response) {
         return response.unauthorized(res, "user not found or inactive");
       }
 
-      // Validasi password
       const validatePassword = encrypt(password) === userByIdentifier.password;
 
       if (!validatePassword) {
@@ -190,22 +188,17 @@ async updateProfile(req: IReqUser, res: Response) {
         return res.status(400).json({ meta: { status: 400, message: "Email wajib diisi" }, data: null });
       }
 
-      // 1. Cari user berdasarkan email
       const user = await User.findOne({ where: { email } });
       if (!user) {
         return res.status(404).json({ meta: { status: 404, message: "Email tidak terdaftar di sistem kami." }, data: null });
       }
 
-      // 2. Generate password sementara (acak)
-      // Contoh hasil: EP-8f3a9 (EP singkatan dari EstatePrime)
       const randomString = Math.random().toString(36).slice(-5);
       const temporaryPassword = `EP-${randomString}#`; 
 
-      // 3. Update password user di database
       user.password = encrypt(temporaryPassword);
       await user.save();
 
-      // 4. Kirim email (Sesuaikan template HTML Anda jika ada, atau gunakan HTML dasar ini)
       const emailHtml = `
         <div style="font-family: Arial, sans-serif; padding: 20px; background-color: #f8fafc;">
           <div style="max-width: 500px; margin: 0 auto; background: white; padding: 30px; border-radius: 10px; text-align: center;">

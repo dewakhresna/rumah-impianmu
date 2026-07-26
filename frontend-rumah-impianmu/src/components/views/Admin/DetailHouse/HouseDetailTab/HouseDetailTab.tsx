@@ -77,7 +77,6 @@ const HouseDetailTab = (props: PropTypes) => {
     }
   }, [dataDetail, setValue]);
 
-  // Reset internal state jika sukses simpan
   useEffect(() => {
     if (isSuccessUpdate) {
       reset();
@@ -232,7 +231,7 @@ const HouseDetailTab = (props: PropTypes) => {
               render={({ field }) => (
                 <Input
                   {...field}
-                  value={field.value || ""} // Mencegah error uncontrolled input
+                  value={field.value || ""}
                   label="Kontak (WhatsApp / Telepon)"
                   labelPlacement="outside"
                   variant="bordered"

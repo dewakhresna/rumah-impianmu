@@ -25,7 +25,6 @@ export default function AuthMenu() {
     );
   }
 
-  // Tampilan JIKA SUDAH LOGIN
   if (isLoggedIn) {
     return (
       <Dropdown placement="bottom-end">
@@ -58,7 +57,6 @@ export default function AuthMenu() {
     );
   }
 
-  // Tampilan JIKA BELUM LOGIN
   return (
     <div className="flex items-center gap-4">
       <Button 

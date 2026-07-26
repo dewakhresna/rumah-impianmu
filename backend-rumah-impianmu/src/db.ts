@@ -1,16 +1,15 @@
 import { Sequelize } from "sequelize";
 import dotenv from "dotenv";
+import { DB_NAME, DB_PASS, DB_USER, DB_HOST } from "./utils/env.js";
 
 dotenv.config();
 
-// Gunakan variabel environment atau langsung string jika ingin lebih pasti
-const sequelize = new Sequelize("db_rumah_impian", "root", "", {
-  host: "localhost",
+const sequelize = new Sequelize(DB_NAME, DB_USER, DB_PASS, {
+  host: DB_HOST,
   dialect: "mysql",
-  logging: false, // Biar terminal tidak penuh dengan log SQL
+  logging: false,
 });
 
-// Test koneksi
 try {
   await sequelize.authenticate();
   console.log("✅ Koneksi database (Sequelize) berhasil!");

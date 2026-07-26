@@ -1,5 +1,5 @@
 import { Response } from "express";
-import { Error as SequelizeError } from "sequelize"; // Menggantikan mongoose
+import { Error as SequelizeError } from "sequelize";
 import * as Yup from "yup";
 
 type Pagination = {
@@ -33,9 +33,7 @@ export default {
       });
     }
 
-    // Error untuk Database MySQL (Sequelize)
     if (error instanceof SequelizeError) {
-      // Mengecek apakah error karena duplikat data (misal email/username sama)
       const isUniqueError = error.name === "SequelizeUniqueConstraintError";
 
       return res.status(isUniqueError ? 400 : 500).json({
@@ -49,7 +47,6 @@ export default {
       });
     }
 
-    // 3. Error Server Umum (Fallback)
     res.status(500).json({
       meta: {
         status: 500,

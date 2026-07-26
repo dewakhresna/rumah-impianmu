@@ -37,7 +37,7 @@ const UserManagement = () => {
         case "actions":
           return (
             <DropdownAction
-              onPressButtonDetail={() => push(`/admin/user/${user.id}`)} // Link ke halaman edit
+              onPressButtonDetail={() => push(`/admin/user/${user.id}`)}
               onPressButtonDelete={() => {
                 setSelectedId(`${user.id}`);
                 deleteUserModal.onOpen();

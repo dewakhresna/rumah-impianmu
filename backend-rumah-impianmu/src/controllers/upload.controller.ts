@@ -12,7 +12,6 @@ export default {
         });
       }
 
-      // Mengembalikan URL gambar lengkap
       const fileUrl = `/uploads/${req.file.filename}`;
 
       return res.status(200).json({
@@ -38,15 +37,12 @@ export default {
         });
       }
 
-      // Memecah URL untuk mengambil nama filenya saja (contoh: "1691234567-gambar.jpg")
       const filename = fileUrl.split("/").pop();
 
-      // Mencari rute absolut letak file tersebut di dalam folder komputer/server
       const filePath = path.join(process.cwd(), "public", "uploads", filename);
 
-      // Mengecek apakah filenya benar-benar ada di dalam folder
       if (fs.existsSync(filePath)) {
-        fs.unlinkSync(filePath); // <--- INI PERINTAH NUKLIR UNTUK MENGHAPUS FILE FISIK
+        fs.unlinkSync(filePath);
         return res.status(200).json({
           meta: { status: 200, message: "File berhasil dihapus dari server" },
           data: null,

@@ -42,10 +42,8 @@ const InputFile = (props: PropTypes) => {
   const drop = useRef<HTMLLabelElement>(null);
   const dropzoneId = useId();
 
-  // State untuk melacak apakah gambar dari server gagal dimuat (Ghost Image)
   const [isImageBroken, setIsImageBroken] = useState(false);
 
-  // Reset status error setiap kali nilai preview berubah/ada file baru
   useEffect(() => {
     setIsImageBroken(false);
   }, [preview]);
@@ -97,7 +95,6 @@ const InputFile = (props: PropTypes) => {
           { "border-danger-500": isInvalid },
         )}
       >
-        {/* HANYA TAMPILKAN JIKA ADA PREVIEW DAN GAMBARNYA TIDAK RUSAK */}
         {preview && !isImageBroken && (
           <div className="relative flex flex-col items-center justify-center p-5 w-full h-full">
             <div className="mb-2 w-1/2">
@@ -106,13 +103,13 @@ const InputFile = (props: PropTypes) => {
                 src={preview} 
                 alt="image" 
                 className="!relative pointer-events-none" 
-                onError={() => setIsImageBroken(true)} // Sensor jika gambar hilang
+                onError={() => setIsImageBroken(true)}
               />
             </div>
             <Button
               isIconOnly
               onPress={onDelete}
-              onClick={(e) => e.preventDefault()} // Mencegah klik tembus ke upload folder
+              onClick={(e) => e.preventDefault()}
               disabled={isDeleting}
               className="absolute right-2 top-2 z-10 flex h-9 w-9 items-center justify-center rounded bg-danger-100"
             >
@@ -125,7 +122,6 @@ const InputFile = (props: PropTypes) => {
           </div>
         )}
 
-        {/* TAMPILKAN KOTAK UPLOAD JIKA KOSONG ATAU JIKA GAMBARNYA RUSAK */}
         {(!preview || isImageBroken) && !isUploading && (
           <div className="flex flex-col items-center justify-center p-5">
             <CiSaveUp2 className="mb-2 h-10 w-10 text-gray-400" />
@@ -137,7 +133,6 @@ const InputFile = (props: PropTypes) => {
           </div>
         )}
 
-        {/* TAMPILAN SAAT SEDANG LOADING UPLOAD */}
         {isUploading && (
           <div className="flex flex-col items-center justify-center p-5">
             <Spinner color="danger" />
@@ -151,7 +146,7 @@ const InputFile = (props: PropTypes) => {
           accept="image/*"
           id={`dropzone-file-${dropzoneId}`}
           onChange={handleOnUpload}
-          disabled={isUploading || isDeleting} // Hanya terkunci saat ada proses mutasi
+          disabled={isUploading || isDeleting}
           onClick={(e) => {
             e.currentTarget.value = "";
             e.target.dispatchEvent(new Event("change", { bubbles: true }));

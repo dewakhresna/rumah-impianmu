@@ -6,7 +6,6 @@ import { CLIENT_HOST, EMAIL_SMTP_USER } from "../utils/env.js";
 import { ROLES } from "../utils/constant.js";
 import * as Yup from "yup";
 
-// --- VALIDATION DTOs 
 const validatePassword = Yup.string()
   .required()
   .min(6, "Password must be at least 6 characters")
@@ -46,7 +45,6 @@ export const userDTO = Yup.object({
 
 export type TypeUser = Yup.InferType<typeof userDTO>;
 
-// Interface untuk Sequelize
 export interface UserAttributes extends Omit<TypeUser, "confirmPassword"> {
   id?: number;
   isActive?: boolean;
@@ -57,7 +55,6 @@ export interface UserAttributes extends Omit<TypeUser, "confirmPassword"> {
   updatedAt?: Date;
 }
 
-// --- SEQUELIZE MODEL ---
 class UserModel extends Model<UserAttributes> implements UserAttributes {
   public declare id: number;
   public declare fullName: string;
@@ -121,16 +118,12 @@ UserModel.init(
   {
     sequelize,
     tableName: "users",
-    timestamps: true, // Otomatis buat createdAt & updatedAt
+    timestamps: true,
     hooks: {
-      // Pengganti pre('save')
       beforeCreate: (user) => {
         user.password = encrypt(user.password);
-        // Di MySQL auto-increment, ID belum ada sebelum di-save. 
-        // Jadi kita gunakan email + timestamp untuk kode aktivasinya agar unik.
         user.activationCode = encrypt(user.email + Date.now().toString());
       },
-      // Pengganti post('save')
       afterCreate: async (user) => {
         try {
           console.log("Send Email to: ", user.email);

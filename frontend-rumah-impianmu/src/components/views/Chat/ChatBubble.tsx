@@ -7,10 +7,8 @@ import {
   Image,
 } from "@heroui/react";
 import { Heart, MessageCircle, MapPin, Eye } from "lucide-react";
-import Link from "next/link"; // Import Link dari Next.js
+import Link from "next/link";
 
-// Jika Anda menggunakan TypeScript, import Message interface:
-// import { Message } from "./types.js";
 
 // Helper untuk format Rupiah
 const formatRupiah = (angka: any) => {
@@ -36,7 +34,6 @@ export default function ChatBubble({ message }: { message: any }) {
         isUser ? "self-end flex-row-reverse" : ""
       }`}
     >
-      {/* Avatar Admin */}
       {!isUser && (
         <Avatar
           src="https://i.pravatar.cc/150?u=a042581f4e29026704d"
@@ -45,7 +42,6 @@ export default function ChatBubble({ message }: { message: any }) {
         />
       )}
 
-      {/* Bubble Container */}
       <div
         className={`p-3 text-sm shadow-sm flex flex-col gap-3 ${
           isUser
@@ -53,10 +49,8 @@ export default function ChatBubble({ message }: { message: any }) {
             : "bg-white border border-slate-100 text-slate-700 rounded-2xl rounded-tl-sm"
         }`}
       >
-        {/* Pesan Pembuka */}
         {message.text && <p className="leading-relaxed">{message.text}</p>}
 
-        {/* Daftar Card Rekomendasi Rumah (Vertical Layout) */}
         {message.houses && message.houses.length > 0 && (
           <div className="flex flex-col gap-4 my-2">
             {message.houses.map((house: any, index: number) => (
@@ -128,10 +122,9 @@ export default function ChatBubble({ message }: { message: any }) {
                     </Button>
                   </div>
 
-                  {/* Baris Bawah: Tombol Lihat Detail */}
                   <Button
                     as={Link}
-                    href={`/listings/${house.id || index}`} // Pastikan house.id tersedia dari backend
+                    href={`/listings/${house.id || index}`}
                     size="sm"
                     color="primary"
                     className="w-full bg-blue-600 font-medium rounded-lg shadow-sm shadow-blue-500/20"

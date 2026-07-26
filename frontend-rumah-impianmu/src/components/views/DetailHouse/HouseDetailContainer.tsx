@@ -9,7 +9,7 @@ import { useDetailHouse } from "./useDetailHouse";
 
 export default function HouseDetailContainer({ id }: { id: string | string[] | undefined }) {
 
-  const { house, isLoading, error } = useDetailHouse(id as string);
+  const { house, isLoading, error, currentUserId } = useDetailHouse(id as string);
 
 
   if (isLoading) {
@@ -43,7 +43,6 @@ export default function HouseDetailContainer({ id }: { id: string | string[] | u
 
       <div className="container mx-auto px-4 lg:px-8">
         
-        {/* Breadcrumb / Back Button */}
         <div className="mb-6">
           <Link 
             href="/" 
@@ -54,22 +53,25 @@ export default function HouseDetailContainer({ id }: { id: string | string[] | u
           </Link>
         </div>
 
-        {/* Top: Carousel Gambar */}
         <div className="mb-10 lg:mb-12">
           <HouseCarousel houseDetail={house.HouseDetail} /> 
         </div>
 
-        {/* Bottom: 2 Column Layout (Info & Contact) */}
         <div className="flex flex-col lg:flex-row gap-10 lg:gap-12 relative">
           
-          {/* Left Column: House Detail Info (Lebar 65%) */}
           <div className="w-full lg:w-[65%]">
             <HouseInfo house={house} />
           </div>
 
-          {/* Right Column: Sticky Contact Card (Lebar 35%) */}
           <aside className="w-full lg:w-[35%]">
-            <ContactCard contact={house.HouseDetail?.contact} contactName={house.HouseDetail?.contact_name} />
+            <ContactCard 
+              houseId={house.id}
+              contact={house.HouseDetail?.contact} 
+              contactName={house.HouseDetail?.contact_name} 
+              currentUserId={currentUserId}
+              initialIsFavorite={house.isFavorite}
+              initialFavoriteId={house.favoriteId}
+            />
           </aside>
 
         </div>

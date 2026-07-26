@@ -14,7 +14,7 @@ interface PropTypes {
   isOpen: boolean;
   onClose: () => void;
   onOpenChange: () => void;
-  refetchHouse: () => void; // Diganti menjadi refetchHouse
+  refetchHouse: () => void;
   selectedId: string;
   setSelectedId: Dispatch<SetStateAction<string>>;
 }
@@ -35,7 +35,6 @@ const DeleteHouseModal = (props: PropTypes) => {
     isSuccessMutateDeleteHouse,
   } = useDeleteHouseModal();
 
-  // Jika sukses dihapus: tutup modal, refresh tabel, kosongkan ID
   useEffect(() => {
     if (isSuccessMutateDeleteHouse) {
       onClose();

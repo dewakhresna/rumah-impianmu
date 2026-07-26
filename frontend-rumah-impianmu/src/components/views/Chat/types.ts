@@ -13,6 +13,6 @@ export interface Message {
   id: number;
   role: "user" | "admin";
   text?: string;
-  houses?: HouseRecommendation[]; // Array rumah untuk di-render jadi Card
-  outroText?: string;             // Pesan penutup (cth: "Apakah ada kriteria lain...")
+  houses?: HouseRecommendation[];
+  outroText?: string;            
 }

@@ -87,7 +87,6 @@ export default {
 
       return res.status(200).json({
         meta: { status: 200, message: "Success update house" },
-        // kembalikan ID dan data yang baru saja dikirim sebagai bentuk konfirmasi
         data: { id: Number(id), ...req.body } 
       });
     } catch (error: any) {

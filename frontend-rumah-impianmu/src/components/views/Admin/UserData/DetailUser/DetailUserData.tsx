@@ -1,4 +1,4 @@
-import { IUser } from "@/types/User"; // Pastikan path ini sesuai dengan interface Anda
+import { IUser } from "@/types/User";
 import {
   Button,
   Card,

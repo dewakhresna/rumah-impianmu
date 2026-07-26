@@ -242,7 +242,6 @@ export const Register = () => {
           </div>
         </div>
 
-        {/* Kanan: Area Branding / Gambar */}
         <div className="hidden lg:flex lg:w-1/2 relative bg-slate-900 overflow-hidden">
           <img
             src="https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?auto=format&fit=crop&q=80&w=2000"
