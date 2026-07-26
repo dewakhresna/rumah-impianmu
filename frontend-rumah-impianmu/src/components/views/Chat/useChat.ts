@@ -1,5 +1,6 @@
 import { useState, useRef, useEffect } from "react";
 import api from "@/utils/api";
+import instance from "@/libs/axios/instance";
 import { Message } from "./types.js";
 
 export function useChat() {
@@ -13,6 +14,28 @@ export function useChat() {
   const [input, setInput] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
+
+  const [currentUserId, setCurrentUserId] = useState<number | null>(null);
+  const [userFavorites, setUserFavorites] = useState<any[]>([]);
+
+  useEffect(() => {
+    const fetchUserData = async () => {
+      try {
+        const authRes = await instance.get("/auth/me");
+        const userId = authRes.data?.data?.id || authRes.data?.id;
+        setCurrentUserId(userId);
+
+        if (userId) {
+          const favRes = await instance.get(`/favorites?userId=${userId}`);
+          setUserFavorites(favRes.data.data);
+        }
+      } catch (error) {
+        console.log("Mode tamu (Belum login)");
+      }
+    };
+    fetchUserData();
+  }, []);
+  // ------------------------------------
 
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
@@ -32,8 +55,17 @@ export function useChat() {
         pesan: userMessage.text,
       });
 
-      // Ambil maksimal 3 rekomendasi terbaik
-      const daftarRekomendasi = response.data.data.rekomendasi.slice(0, 3);
+      // --- PERBAIKAN: Sisipkan status favorit ke hasil rekomendasi AI ---
+      const daftarRekomendasi = response.data.data.rekomendasi
+        .slice(0, 3)
+        .map((house: any) => {
+          const isFav = userFavorites.find((f: any) => f.house_id === house.id);
+          return {
+            ...house,
+            isFavorite: !!isFav,
+            favoriteId: isFav ? isFav.id : null,
+          };
+        });
 
       setMessages((prev) => [
         ...prev,
@@ -67,5 +99,6 @@ export function useChat() {
     isLoading,
     messagesEndRef,
     handleSendMessage,
+    currentUserId,
   };
 }

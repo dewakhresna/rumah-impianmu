@@ -1,4 +1,5 @@
 export interface HouseRecommendation {
+  id: number;
   nama: string;
   c1_harga: number;
   c2_jarak: number;
@@ -7,6 +8,8 @@ export interface HouseRecommendation {
   skor?: number;
   lokasi?: string; 
   imageUrl?: string;
+  isFavorite?: boolean;
+  favoriteId?: number | null;
 }
 
 export interface Message {
