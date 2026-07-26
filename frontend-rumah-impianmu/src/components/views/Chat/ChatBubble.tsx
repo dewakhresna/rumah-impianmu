@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import instance from "@/libs/axios/instance";
 import {
@@ -43,6 +43,11 @@ function ChatHouseCard({
   );
   const [isLoadingFav, setIsLoadingFav] = useState(false);
 
+  useEffect(() => {
+    setIsFavorite(house.isFavorite || false);
+    setFavoriteId(house.favoriteId || null);
+  }, [house.isFavorite, house.favoriteId]);
+
   const handleFavoriteClick = async () => {
     if (!currentUserId) {
       alert(
@@ -66,6 +71,9 @@ function ChatHouseCard({
         setIsFavorite(true);
         setFavoriteId(response.data.data.id);
       }
+
+      window.dispatchEvent(new Event("favoriteChanged"));
+
     } catch (error) {
       console.error("Gagal mengubah status favorit:", error);
       alert("Terjadi kesalahan jaringan saat menyimpan favorit.");

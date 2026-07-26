@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import environment from "@/config/environment";
 import {
   Button,
@@ -39,10 +39,14 @@ const getImageUrl = (imagePath?: string | null) => {
 function HouseCard({ house, currentUserId }: { house: HouseData; currentUserId: number | null }) {
   const router = useRouter();
 
-  // Inisialisasi state dari properti yang dikirim backend
   const [isFavorite, setIsFavorite] = useState(house.isFavorite || false);
   const [favoriteId, setFavoriteId] = useState<number | null>(house.favoriteId || null);
   const [isLoadingFav, setIsLoadingFav] = useState(false);
+
+  useEffect(() => {
+    setIsFavorite(house.isFavorite || false);
+    setFavoriteId(house.favoriteId || null);
+  }, [house.isFavorite, house.favoriteId]);
 
   const imageUrl = getImageUrl(house.HouseDetail?.image_1);
   const description = house.HouseDetail?.description || "Deskripsi properti tidak tersedia.";
@@ -72,6 +76,9 @@ function HouseCard({ house, currentUserId }: { house: HouseData; currentUserId: 
         setIsFavorite(true);
         setFavoriteId(response.data.data.id);
       }
+
+      window.dispatchEvent(new Event("favoriteChanged"));
+
     } catch (error) {
       console.error("Gagal mengubah status favorit:", error);
       alert("Terjadi kesalahan jaringan saat menyimpan favorit.");
@@ -145,7 +152,6 @@ function HouseCard({ house, currentUserId }: { house: HouseData; currentUserId: 
 }
 
 export default function ListingGrid() {
-  // Ekstrak currentUserId dari hook
   const { houses, isLoading, error, currentUserId } = useListing();
 
   if (isLoading) {

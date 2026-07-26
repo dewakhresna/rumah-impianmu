@@ -35,7 +35,44 @@ export function useChat() {
     };
     fetchUserData();
   }, []);
-  // ------------------------------------
+
+  useEffect(() => {
+    const syncChatFavorites = async () => {
+      if (!currentUserId) return;
+
+      try {
+        const favRes = await instance.get(`/favorites?userId=${currentUserId}`);
+        const latestFavorites = favRes.data.data;
+        setUserFavorites(latestFavorites);
+
+        setMessages((prevMessages) =>
+          prevMessages.map((msg) => {
+            if (!msg.houses) return msg;
+
+            const updatedHouses = msg.houses.map((h: any) => {
+              const favRecord = latestFavorites.find(
+                (f: any) => f.house_id === h.id,
+              );
+              return {
+                ...h,
+                isFavorite: !!favRecord,
+                favoriteId: favRecord ? favRecord.id : null,
+              };
+            });
+
+            return { ...msg, houses: updatedHouses };
+          }),
+        );
+      } catch (error) {
+        console.error("Gagal sinkronisasi favorit di chat:", error);
+      }
+    };
+
+
+    window.addEventListener("favoriteChanged", syncChatFavorites);
+    return () =>
+      window.removeEventListener("favoriteChanged", syncChatFavorites);
+  }, [currentUserId]);
 
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
@@ -55,7 +92,6 @@ export function useChat() {
         pesan: userMessage.text,
       });
 
-      // --- PERBAIKAN: Sisipkan status favorit ke hasil rekomendasi AI ---
       const daftarRekomendasi = response.data.data.rekomendasi
         .slice(0, 3)
         .map((house: any) => {
@@ -69,12 +105,12 @@ export function useChat() {
 
       setMessages((prev) => [
         ...prev,
-        { 
-          id: Date.now() + 1, 
-          role: "admin", 
+        {
+          id: Date.now() + 1,
+          role: "admin",
           text: "Berikut adalah rekomendasi rumah terbaik berdasarkan kriteria Anda:",
-          houses: daftarRekomendasi, 
-          outroText: "Apakah ada kriteria lain yang ingin Anda ubah?"
+          houses: daftarRekomendasi,
+          outroText: "Apakah ada kriteria lain yang ingin Anda ubah?",
         },
       ]);
     } catch (error) {
