@@ -175,7 +175,15 @@ function HouseCard({
 }
 
 export default function ListingGrid() {
-  const { houses, isLoading, error, currentUserId } = useListing();
+  const {
+    houses,
+    isLoading,
+    isLoadingMore,
+    error,
+    currentUserId,
+    hasMore,
+    loadMore,
+  } = useListing();
 
   const districts = [
     "Bekasi Timur",
@@ -300,14 +308,41 @@ export default function ListingGrid() {
             </Button>
           </div>
         ) : (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {houses.map((house) => (
-              <HouseCard
-                key={house.id}
-                house={house}
-                currentUserId={currentUserId}
-              />
-            ))}
+          <div className="flex flex-col gap-10">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              {houses.map((house) => (
+                <HouseCard
+                  key={house.id}
+                  house={house}
+                  currentUserId={currentUserId}
+                />
+              ))}
+            </div>
+
+            {hasMore && (
+              <div className="flex justify-center mt-2">
+                <Button
+                  variant="flat"
+                  color="primary"
+                  size="lg"
+                  isLoading={isLoadingMore}
+                  onPress={loadMore}
+                  className="font-semibold bg-blue-50 text-blue-600 hover:bg-blue-100 px-10 rounded-xl transition-all duration-300"
+                >
+                  {isLoadingMore
+                    ? "Memuat Properti..."
+                    : "Tampilkan Lebih Banyak"}
+                </Button>
+              </div>
+            )}
+
+            {!hasMore && houses.length > 0 && (
+              <div className="flex items-center justify-center gap-3 text-slate-400 text-sm font-medium mt-4">
+                <span className="h-[1px] w-12 bg-slate-200"></span>
+                Semua properti telah ditampilkan
+                <span className="h-[1px] w-12 bg-slate-200"></span>
+              </div>
+            )}
           </div>
         )}
       </div>

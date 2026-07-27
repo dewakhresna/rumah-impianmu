@@ -152,12 +152,12 @@ function HouseCard({ house, currentUserId }: { house: HouseData; currentUserId: 
 }
 
 export default function ListingGrid() {
-  const { houses, isLoading, error, currentUserId } = useListing();
+  const { houses, isLoading, isLoadingMore, error, currentUserId, hasMore, loadMore } = useListing();
 
   if (isLoading) {
     return (
       <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
-        {[1, 2, 3, 4, 5, 6].map((i) => (
+        {Array.from({ length: 6 }).map((_, i) => (
           <Card
             key={i}
             className="w-full space-y-5 p-4 rounded-2xl shadow-sm border-none"
@@ -201,11 +201,36 @@ export default function ListingGrid() {
     );
   }
 
-  return (
-    <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
-      {houses.map((house) => (
-        <HouseCard key={house.id} house={house} currentUserId={currentUserId} />
-      ))}
+return (
+    <div className="flex flex-col gap-10 pb-8">
+      <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
+        {houses.map((house) => (
+          <HouseCard key={house.id} house={house} currentUserId={currentUserId} />
+        ))}
+      </div>
+
+      {hasMore && (
+        <div className="flex justify-center mt-2">
+          <Button
+            variant="flat"
+            color="primary"
+            size="lg"
+            isLoading={isLoadingMore}
+            onPress={loadMore}
+            className="font-semibold bg-blue-50 text-blue-600 hover:bg-blue-100 px-10 rounded-xl transition-all duration-300"
+          >
+            {isLoadingMore ? "Memuat Properti..." : "Tampilkan Lebih Banyak"}
+          </Button>
+        </div>
+      )}
+
+      {!hasMore && houses.length > 0 && (
+        <div className="flex items-center justify-center gap-3 text-slate-400 text-sm font-medium mt-4">
+          <span className="h-[1px] w-12 bg-slate-200"></span>
+          Semua properti telah ditampilkan
+          <span className="h-[1px] w-12 bg-slate-200"></span>
+        </div>
+      )}
     </div>
   );
 }

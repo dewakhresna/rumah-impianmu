@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import instance from "@/libs/axios/instance";
 
 export interface HouseData {
@@ -24,60 +24,109 @@ export const useListing = () => {
   const [error, setError] = useState<string | null>(null);
   const [currentUserId, setCurrentUserId] = useState<number | null>(null);
 
-  useEffect(() => {
-    const fetchAllData = async () => {
-      try {
+  const [isLoadingMore, setIsLoadingMore] = useState(false);
+  const [page, setPage] = useState(1);
+  const [hasMore, setHasMore] = useState(true);
+  const limit = 6;
+
+  const fetchHouses = useCallback(async (currentPage: number, isLoadMore: boolean = false) => {
+    try {
+      if (isLoadMore) {
+        setIsLoadingMore(true);
+      } else {
         setIsLoading(true);
+      }
 
-        // 1. Ambil data rumah terlebih dahulu
-        const housesRes = await instance.get("/houses");
-        let housesData: HouseData[] = housesRes.data.data;
+      const housesRes = await instance.get(`/houses?page=${currentPage}&limit=${limit}`);
+      
+      const fetchedData = housesRes.data.data.rows || housesRes.data.data || [];
+      let housesData: HouseData[] = fetchedData;
 
-        // 2. Cek apakah user sedang login
-        let userId = null;
+      if (fetchedData.length < limit) {
+        setHasMore(false);
+      } else {
+        setHasMore(true);
+      }
+
+      let userId = currentUserId;
+      if (!userId) {
         try {
           const authRes = await instance.get("/auth/me");
-          // Sesuaikan dengan struktur response auth Anda
           userId = authRes.data?.data?.id || authRes.data?.id; 
           setCurrentUserId(userId);
         } catch (authErr) {
-          // Jika error (misal token tidak ada/expired), abaikan saja.
-          // User akan dianggap sebagai guest (tamu).
           console.log("Pengguna belum login (Guest Mode)");
         }
-
-        // 3. Jika user login, ambil data favoritnya dan cocokkan dengan data rumah
-        if (userId) {
-          const favRes = await instance.get(`/favorites?userId=${userId}`);
-          const userFavorites = favRes.data.data; // Array of favorite objects
-
-          // Buat Map (Kamus) untuk pencarian yang lebih cepat
-          // Key = house_id, Value = favorite_id
-          const favoriteMap = new Map();
-          userFavorites.forEach((fav: any) => {
-            favoriteMap.set(fav.house_id, fav.id);
-          });
-
-          // Sisipkan status isFavorite dan favoriteId ke masing-masing objek rumah
-          housesData = housesData.map((house) => ({
-            ...house,
-            isFavorite: favoriteMap.has(house.id),
-            favoriteId: favoriteMap.get(house.id) || null,
-          }));
-        }
-
-        // 4. Simpan ke state
-        setHouses(housesData);
-      } catch (err: any) {
-        console.error("Error fetching data:", err);
-        setError("Gagal mengambil data properti. Silakan coba lagi nanti.");
-      } finally {
-        setIsLoading(false);
       }
-    };
 
-    fetchAllData();
-  }, []);
+      if (userId) {
+        const favRes = await instance.get(`/favorites?userId=${userId}`);
+        const userFavorites = favRes.data.data;
 
-  return { houses, isLoading, error, currentUserId };
+        const favoriteMap = new Map();
+        userFavorites.forEach((fav: any) => {
+          favoriteMap.set(fav.house_id, fav.id);
+        });
+
+        housesData = housesData.map((house) => ({
+          ...house,
+          isFavorite: favoriteMap.has(house.id),
+          favoriteId: favoriteMap.get(house.id) || null,
+        }));
+      }
+
+      if (isLoadMore) {
+        setHouses((prev) => [...prev, ...housesData]);
+      } else {
+        setHouses(housesData);
+      }
+
+    } catch (err: any) {
+      console.error("Error fetching data:", err);
+      setError("Gagal mengambil data properti. Silakan coba lagi nanti.");
+    } finally {
+      setIsLoading(false);
+      setIsLoadingMore(false);
+    }
+  }, [currentUserId, limit]);
+
+  useEffect(() => {
+    fetchHouses(1, false);
+  }, [fetchHouses]);
+
+  const refreshFavoritesOnly = useCallback(async () => {
+    if (!currentUserId) return;
+    try {
+      const favRes = await instance.get(`/favorites?userId=${currentUserId}`);
+      const userFavorites = favRes.data.data;
+const favoriteMap = new Map<number, number>(
+        userFavorites.map((fav: any) => [fav.house_id, fav.id])
+      );
+
+      setHouses((prevHouses) => 
+        prevHouses.map(house => ({
+          ...house,
+          isFavorite: favoriteMap.has(house.id),
+          favoriteId: (favoriteMap.get(house.id) as number) || null 
+        }))
+      );
+
+    } catch (error) {
+      console.error("Gagal sinkronisasi ulang favorit", error);
+    }
+  }, [currentUserId]);
+
+  useEffect(() => {
+    window.addEventListener("favoriteChanged", refreshFavoritesOnly);
+    return () => window.removeEventListener("favoriteChanged", refreshFavoritesOnly);
+  }, [refreshFavoritesOnly]);
+
+  const loadMore = () => {
+    if (!hasMore || isLoadingMore) return;
+    const nextPage = page + 1;
+    setPage(nextPage);
+    fetchHouses(nextPage, true);
+  };
+
+  return { houses, isLoading, isLoadingMore, error, currentUserId, hasMore, loadMore };
 };
