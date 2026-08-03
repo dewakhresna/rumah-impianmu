@@ -8,7 +8,7 @@ export function useChat() {
     {
       id: 1,
       role: "admin",
-      text: "Halo! 👋 Selamat datang di Rumah Impianmu. Ada kriteria rumah yang sedang Anda cari hari ini?",
+      text: "Halo! 👋 Selamat datang di Rumah Impianmu. Silakan atur filter spesifikasi dasar yang Anda inginkan, lalu ceritakan kriteria idaman Anda di sini!",
     },
   ]);
   const [input, setInput] = useState("");
@@ -17,8 +17,17 @@ export function useChat() {
 
   const [currentUserId, setCurrentUserId] = useState<number | null>(null);
   const [userFavorites, setUserFavorites] = useState<any[]>([]);
-
   const [isMounted, setIsMounted] = useState(false);
+
+  // STATE BARU: Untuk menampung nilai Hard Filter
+  const [filters, setFilters] = useState({
+    hargaMin: "",
+    hargaMax: "",
+    beds: "",
+    baths: "",
+    luasMin: "",
+    luasMax: "",
+  });
 
   useEffect(() => {
     setIsMounted(true);
@@ -103,41 +112,71 @@ export function useChat() {
     setIsLoading(true);
 
     try {
-      const response = await api.post("/chat/send", {
+      // PERUBAHAN: Menambahkan nilai filter ke dalam payload
+      const payload = {
         pesan: userMessage.text,
+        hargaMin: filters.hargaMin ? Number(filters.hargaMin) : undefined,
+        hargaMax: filters.hargaMax ? Number(filters.hargaMax) : undefined,
+        beds: filters.beds ? Number(filters.beds) : undefined,
+        baths: filters.baths ? Number(filters.baths) : undefined,
+        luasMin: filters.luasMin ? Number(filters.luasMin) : undefined,
+        luasMax: filters.luasMax ? Number(filters.luasMax) : undefined,
+      };
+
+      const response = await api.post("/chat/send", payload);
+
+      // Mengambil pesan natural dari AI dan daftar rumah
+      const { balasan_ai, rekomendasi } = response.data.data;
+
+      const daftarRekomendasi = (rekomendasi || []).map((house: any) => {
+        const isFav = userFavorites.find((f: any) => f.house_id === house.id);
+        return {
+          ...house,
+          isFavorite: !!isFav,
+          favoriteId: isFav ? isFav.id : null,
+        };
       });
 
-      const daftarRekomendasi = response.data.data.rekomendasi
-        .slice(0, 3)
-        .map((house: any) => {
-          const isFav = userFavorites.find((f: any) => f.house_id === house.id);
-          return {
-            ...house,
-            isFavorite: !!isFav,
-            favoriteId: isFav ? isFav.id : null,
-          };
-        });
-
       setMessages((prev) => [
         ...prev,
         {
           id: Date.now() + 1,
           role: "admin",
-          text: "Berikut adalah rekomendasi rumah terbaik berdasarkan kriteria Anda:",
+          text:
+            balasan_ai ||
+            "Berikut adalah rekomendasi rumah terbaik untuk Anda:", // Menggunakan kalimat dari AI
           houses: daftarRekomendasi,
-          outroText: "Apakah ada kriteria lain yang ingin Anda ubah?",
         },
       ]);
-    } catch (error) {
-      console.error("Error fetching chat response:", error);
-      setMessages((prev) => [
-        ...prev,
-        {
-          id: Date.now() + 1,
-          role: "admin",
-          text: "Maaf, sistem AI atau koneksi sedang bermasalah.",
-        },
-      ]);
+    } catch (error: any) {
+      if (error.response && error.response.status === 404) {
+        const errorData = error.response.data;
+        setMessages((prev) => [
+          ...prev,
+          {
+            id: Date.now() + 1,
+            role: "admin",
+            text:
+              errorData.data?.balasan_ai ||
+              errorData.message ||
+              "Maaf, saya tidak menemukan rumah yang sesuai dengan filter tersebut.",
+          },
+        ]);
+      }
+      // 2. Jika errornya BENAR-BENAR rusak (misal: Server mati (500) atau API Groq habis kuota)
+      else {
+        // Barulah tampilkan error merah di console
+        console.error("Kesalahan Sistem/Jaringan:", error);
+
+        setMessages((prev) => [
+          ...prev,
+          {
+            id: Date.now() + 1,
+            role: "admin",
+            text: "Maaf, sistem AI atau koneksi sedang bermasalah.",
+          },
+        ]);
+      }
     } finally {
       setIsLoading(false);
     }
@@ -151,5 +190,7 @@ export function useChat() {
     messagesEndRef,
     handleSendMessage,
     currentUserId,
+    filters, // Diekspor agar bisa dihubungkan ke Select Box / Input UI
+    setFilters, // Diekspor agar bisa dihubungkan ke Select Box / Input UI
   };
 }

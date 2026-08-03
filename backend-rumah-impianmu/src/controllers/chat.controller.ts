@@ -11,13 +11,22 @@ const groq = new Groq({
 export default {
   async chat(req: Request, res: Response) {
     try {
-      const { pesan } = req.body;
+      // 1. Ekstrak pesan dan Hard Filter dari body request
+      const { 
+        pesan, 
+        hargaMin, hargaMax, 
+        beds, baths,        
+        luasMin, luasMax   
+      } = req.body;
 
       if (!pesan) {
         return res.status(400).json({ message: "Pesan wajib diisi" });
       }
 
-      const rawData = await HouseService.getAllForChat();
+      // 2. Tarik data MENGGUNAKAN Filter Mutlak
+      const rawData = await HouseService.getFilteredForChat({
+        hargaMin, hargaMax, beds, baths, luasMin, luasMax
+      });
 
       const dataRumah: Rumah[] = rawData.map((r: any) => ({
         id: r.id,
@@ -30,28 +39,37 @@ export default {
         imageUrl: r.HouseDetail?.image_1,
       }));
 
+      // Case Data Kosong
       if (dataRumah.length === 0) {
-        return res
-          .status(404)
-          .json({ message: "Data rumah kosong di database" });
+        return res.status(404).json({ 
+          status: "not_found",
+          message: "Maaf, tidak ada rumah yang sesuai dengan kriteria filter Anda. Cobalah memperluas rentang harga atau kurangi filter kamar.",
+          data: { balasan_ai: "Saya tidak menemukan rumah yang pas dengan filter tersebut.", rekomendasi: [] }
+        });
       }
 
-      // 1. Ekstraksi Bobot via AI
+      // 3. Ekstraksi Bobot & Generate Balasan via AI Groq
       const completion = await groq.chat.completions.create({
         messages: [
           {
             role: "system",
-            content: `Tugas Anda adalah mengekstrak PREFERENSI (Tingkat Kepentingan) user menjadi bobot angka.
-                    Gunakan skala 1 sampai 5:
-                    1 = Tidak Penting (User mengabaikan kriteria ini)
-                    3 = Cukup Penting (Standar)
-                    5 = Sangat Penting (User sangat menekankan kriteria ini)
+            content: `Anda adalah agen properti cerdas. Tugas Anda ada 2:
+            1. Buat 1-2 kalimat balasan ramah untuk merespons chat pengguna, seolah Anda akan menyajikan rekomendasinya di bawah chat ini.
+            2. Ekstrak PREFERENSI pengguna dari chat menjadi bobot angka (skala 1-5).
+               1 = Tidak Penting, 3 = Cukup Penting, 5 = Sangat Penting.
 
-                    Kriteria:
-                    C1_Harga, C2_Jarak, C3_Keamanan, C4_Luas
-
-                    Output HARUS hanya JSON murni tanpa markdown atau penjelasan. 
-                    Format: {"C1_Harga": x, "C2_Jarak": x, "C3_Keamanan": x, "C4_Luas": x}`,
+            Kriteria: C1_Harga, C2_Jarak, C3_Keamanan, C4_Luas.
+            
+            Output HARUS JSON murni tanpa markdown, dengan format persis seperti ini:
+            {
+              "balasan_chat": "Tentu, ini beberapa rekomendasi rumah strategis dan aman untuk Anda...",
+              "bobot": {
+                "C1_Harga": 3,
+                "C2_Jarak": 5,
+                "C3_Keamanan": 4,
+                "C4_Luas": 3
+              }
+            }`
           },
           {
             role: "user",
@@ -59,21 +77,40 @@ export default {
           },
         ],
         model: "llama-3.3-70b-versatile",
-        temperature: 0,
+        response_format: { type: "json_object" }, 
+        temperature: 0.2, 
       });
 
-      const bobotUser = JSON.parse(
-        completion.choices[0].message.content || "{}",
-      );
+      let aiResponse;
+      try {
+        aiResponse = JSON.parse(completion.choices[0].message.content || "{}");
+      } catch (e) {
+        console.error("Gagal mem-parsing JSON dari Groq:", e);
+        aiResponse = {
+          balasan_chat: "Berikut adalah properti terbaik yang berhasil saya rangkum untuk Anda.",
+          bobot: { C1_Harga: 3, C2_Jarak: 3, C3_Keamanan: 3, C4_Luas: 3 }
+        };
+      }
 
-      const hasil = hitungTopsis(dataRumah, bobotUser);
+      const bobotUser = aiResponse.bobot;
+      const pesanBalasan = aiResponse.balasan_chat;
 
-      // Respon
+      let hasilRekomendasi = [];
+      
+      // Case Hanya 1 Data Tersisa
+      if (dataRumah.length === 1) {
+        hasilRekomendasi = [{ ...dataRumah[0], skor: "1.0000" }];
+      } else {
+        hasilRekomendasi = hitungTopsis(dataRumah, bobotUser);
+      }
+
+      // 5. Respon Final ke Frontend
       return res.status(200).json({
         status: "success",
         data: {
-          bobot: bobotUser,
-          rekomendasi: hasil,
+          balasan_ai: pesanBalasan,
+          bobot_ekstraksi: bobotUser,
+          rekomendasi: hasilRekomendasi.slice(0, 3), // Kirim Top 3 data
         },
       });
     } catch (error: any) {

@@ -2,6 +2,16 @@ import { Op } from "sequelize";
 import House, { HouseAttributes } from "../models/house.model.js";
 import HouseDetail from "../models/house_detail.model.js";
 
+// Buat antarmuka (interface) untuk menampung parameter filter dari controller
+export interface ChatFilters {
+  hargaMin?: number;
+  hargaMax?: number;
+  luasMin?: number;
+  luasMax?: number;
+  beds?: number;
+  baths?: number;
+}
+
 export default {
   async findAll(page: number = 1, limit: number = 10, search: string = "") {
     const offset = (page - 1) * limit;
@@ -22,12 +32,43 @@ export default {
     return { count, rows };
   },
 
-  async getAllForChat() {
+  async getFilteredForChat(filters: ChatFilters) {
+    const { hargaMin, hargaMax, luasMin, luasMax, beds, baths } = filters;
+
+    const whereHouse: any = {};
+
+    if (hargaMin !== undefined || hargaMax !== undefined) {
+      whereHouse.c1_harga = {};
+      if (hargaMin !== undefined) whereHouse.c1_harga[Op.gte] = hargaMin;
+      if (hargaMax !== undefined) whereHouse.c1_harga[Op.lte] = hargaMax; 
+    }
+
+    if (luasMin !== undefined || luasMax !== undefined) {
+      whereHouse.c4_luas = {};
+      if (luasMin !== undefined) whereHouse.c4_luas[Op.gte] = luasMin;
+      if (luasMax !== undefined) whereHouse.c4_luas[Op.lte] = luasMax;
+    }
+
+    const whereDetail: any = {};
+
+    if (beds !== undefined) {
+      whereDetail.beds = { [Op.gte]: beds }; 
+    }
+
+    if (baths !== undefined) {
+      whereDetail.baths = { [Op.gte]: baths };
+    }
+
+    const hasDetailFilter = Object.keys(whereDetail).length > 0;
+
     return await House.findAll({
+      where: whereHouse,
       order: [["id", "DESC"]],
       include: [
         {
           model: HouseDetail,
+          where: hasDetailFilter ? whereDetail : undefined,
+          required: hasDetailFilter, 
         },
       ],
     });

@@ -9,18 +9,12 @@ import {
   CardFooter,
   Image,
   Skeleton,
-  Popover,
-  PopoverTrigger,
-  PopoverContent,
-  Select,
-  SelectItem,
 } from "@heroui/react";
 import {
   Bed,
   Bath,
   Maximize,
   MapPin,
-  Filter,
   Home,
   AlertCircle,
   Heart,
@@ -185,17 +179,6 @@ export default function ListingGrid() {
     loadMore,
   } = useListing();
 
-  const districts = [
-    "Bekasi Timur",
-    "Bekasi Barat",
-    "Bekasi Selatan",
-    "Bekasi Utara",
-    "Rawalumbu",
-    "Pondok Gede",
-    "Jatiasih",
-    "Mustikajaya",
-  ];
-
   return (
     <div className="w-full flex flex-col gap-8 pb-16">
       <div className="flex flex-col md:flex-row justify-between items-start md:items-end gap-6">
@@ -207,41 +190,6 @@ export default function ListingGrid() {
             Discover your dream home from our latest property listings.
           </p>
         </div>
-
-        <Popover placement="bottom-end" showArrow offset={8}>
-          <PopoverTrigger>
-            <Button
-              variant="bordered"
-              className="h-12 px-6 rounded-xl border-slate-200 text-slate-700 bg-white shadow-sm hover:border-blue-400 hover:bg-blue-50 hover:text-blue-700 transition-all duration-300 font-medium"
-            >
-              <Filter
-                size={18}
-                className="mr-2 text-slate-500 group-hover:text-blue-600"
-              />
-              Filter
-            </Button>
-          </PopoverTrigger>
-          <PopoverContent className="w-80 p-5 rounded-2xl shadow-xl border border-slate-100 bg-white">
-            <div className="w-full flex flex-col gap-2">
-              <label className="text-sm font-semibold text-slate-700 mb-1">
-                Filter by District
-              </label>
-              <Select
-                placeholder="Select district"
-                variant="bordered"
-                classNames={{
-                  trigger:
-                    "h-12 rounded-xl border-slate-200 hover:border-blue-400 focus-within:!border-blue-500 focus-within:!ring-2 focus-within:!ring-blue-100 transition-all duration-300",
-                  value: "text-slate-700 font-medium",
-                }}
-              >
-                {districts.map((district) => (
-                  <SelectItem key={district}>{district}</SelectItem>
-                ))}
-              </Select>
-            </div>
-          </PopoverContent>
-        </Popover>
       </div>
 
       <div className="w-full min-h-[400px]">
@@ -296,7 +244,7 @@ export default function ListingGrid() {
             </h3>
             <p className="text-slate-500 text-base max-w-md mb-8 leading-relaxed">
               There are currently no properties matching your search. Please
-              check back later or try adjusting your filters.
+              check back later.
             </p>
             <Button
               variant="bordered"

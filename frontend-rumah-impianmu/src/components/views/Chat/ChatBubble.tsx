@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import instance from "@/libs/axios/instance";
+import environment from "@/config/environment";
 import {
   Avatar,
   Card,
@@ -12,7 +13,6 @@ import {
 import { Heart, MessageCircle, MapPin, Eye } from "lucide-react";
 import Link from "next/link";
 
-// Helper untuk format Rupiah
 const formatRupiah = (angka: any) => {
   const validAngka = Number(angka);
 
@@ -25,6 +25,20 @@ const formatRupiah = (angka: any) => {
     currency: "IDR",
     minimumFractionDigits: 0,
   }).format(validAngka);
+};
+
+const getImageUrl = (imagePath?: string | null) => {
+  if (!imagePath || imagePath === "") {
+    return "https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?auto=format&fit=crop&w=800&q=80";
+  }
+
+  if (imagePath.startsWith("http")) {
+    return imagePath;
+  }
+
+  const baseUrl =
+    environment.Domain?.replace(/\/$/, "") || "http://localhost:5000";
+  return `${baseUrl}${imagePath}`;
 };
 
 function ChatHouseCard({
@@ -94,10 +108,7 @@ function ChatHouseCard({
     <Card className="w-full bg-white border border-slate-200 shadow-sm hover:shadow-md transition-shadow overflow-hidden rounded-xl">
       <div className="relative w-full h-40 sm:h-48">
         <Image
-          src={
-            house.imageUrl ||
-            "https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?auto=format&fit=crop&w=600&q=80"
-          }
+          src={getImageUrl(house.imageUrl || house.HouseDetail?.image_1)}
           alt={house.nama}
           classNames={{
             wrapper: "w-full h-full",
