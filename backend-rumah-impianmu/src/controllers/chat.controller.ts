@@ -23,7 +23,22 @@ export default {
         return res.status(400).json({ message: "Pesan wajib diisi" });
       }
 
+      // --- LOGGING 1: INPUT PENGGUNA ---
+      console.log("\n=========================================================");
+      console.log("📥 MENERIMA PESAN DARI PENGGUNA (LIVECHAT)");
+      console.log("=========================================================");
+      console.log(`💬 Pesan Pengguna : "${pesan}"`);
+      console.log("🎯 Hard Filter:");
+      console.table([{
+        "Harga Min": hargaMin || "Tidak dibatasi",
+        "Harga Max": hargaMax || "Tidak dibatasi",
+        "Kamar Tidur (Beds)": beds || "Tidak dibatasi",
+        "Luas Min": luasMin || "Tidak dibatasi",
+        "Luas Max": luasMax || "Tidak dibatasi"
+      }]);
+
       // 2. Tarik data MENGGUNAKAN Filter Mutlak
+      console.log("\n🗃️ QUERY KE DATABASE BERDASARKAN FILTER...");
       const rawData = await HouseService.getFilteredForChat({
         hargaMin, hargaMax, beds, baths, luasMin, luasMax
       });
@@ -39,8 +54,19 @@ export default {
         imageUrl: r.HouseDetail?.image_1,
       }));
 
+      console.log(`✅ Ditemukan ${dataRumah.length} properti yang sesuai Hard Filter.`);
+      if (dataRumah.length > 0) {
+        console.log("Daftar Properti yang lolos untuk dihitung TOPSIS:");
+        console.table(dataRumah.map(r => ({
+          ID: r.id, 
+          Nama_Properti: r.nama, 
+          Harga: r.c1_harga 
+        })));
+      }
+
       // Case Data Kosong
       if (dataRumah.length === 0) {
+        console.log("❌ Eksekusi dihentikan karena tidak ada data yang sesuai filter (404 Not Found).\n");
         return res.status(404).json({ 
           status: "not_found",
           message: "Maaf, tidak ada rumah yang sesuai dengan kriteria filter Anda. Cobalah memperluas rentang harga atau kurangi filter kamar.",
@@ -49,6 +75,7 @@ export default {
       }
 
       // 3. Ekstraksi Bobot & Generate Balasan via AI Groq
+      console.log("\n🤖 MENGIRIM PESAN KE AI UNTUK EKSTRAKSI BOBOT...");
       const completion = await groq.chat.completions.create({
         messages: [
           {
@@ -84,8 +111,9 @@ export default {
       let aiResponse;
       try {
         aiResponse = JSON.parse(completion.choices[0].message.content || "{}");
+        console.log("✅ Berhasil mengekstrak JSON dari respon AI.");
       } catch (e) {
-        console.error("Gagal mem-parsing JSON dari Groq:", e);
+        console.error("❌ Gagal mem-parsing JSON dari Groq:", e);
         aiResponse = {
           balasan_chat: "Berikut adalah properti terbaik yang berhasil saya rangkum untuk Anda.",
           bobot: { C1_Harga: 3, C2_Jarak: 3, C3_Keamanan: 3, C4_Luas: 3 }
@@ -95,16 +123,22 @@ export default {
       const bobotUser = aiResponse.bobot;
       const pesanBalasan = aiResponse.balasan_chat;
 
+      // 4. Proses Eksekusi TOPSIS
       let hasilRekomendasi = [];
       
       // Case Hanya 1 Data Tersisa
       if (dataRumah.length === 1) {
+        console.log("\n⚠️ [INFO] Hanya 1 data yang lolos filter. Melewati perhitungan TOPSIS dan memberikan skor absolut 1.0000.");
         hasilRekomendasi = [{ ...dataRumah[0], skor: "1.0000" }];
       } else {
+        console.log("\n⚙️ MENERUSKAN DATA DAN BOBOT AI KE ALGORITMA TOPSIS...");
+        // Di sini fungsi hitungTopsis akan dipanggil, dan log dari file topsis.ts akan muncul di terminal
         hasilRekomendasi = hitungTopsis(dataRumah, bobotUser);
       }
 
       // 5. Respon Final ke Frontend
+      console.log("\n🚀 MENGIRIM 3 REKOMENDASI TERATAS UNTUK DITAMPILKAN");
+      
       return res.status(200).json({
         status: "success",
         data: {
