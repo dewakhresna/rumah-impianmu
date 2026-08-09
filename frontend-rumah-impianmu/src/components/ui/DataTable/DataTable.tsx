@@ -60,7 +60,7 @@ const DataTable = (props: PropTypes) => {
           <Input
             isClearable
             className="w-full sm:max-w-[320px]"
-            placeholder="Search properties..."
+            placeholder="Cari Data..."
             startContent={<CiSearch className="text-slate-400 text-lg mr-1" />}
             onClear={handleClearSearch}
             onChange={handleSearch}

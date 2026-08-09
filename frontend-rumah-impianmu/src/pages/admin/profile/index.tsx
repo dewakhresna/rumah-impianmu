@@ -4,8 +4,8 @@ import Profile from "@/components/views/Admin/Profile/ProfileInfo";
 const AdminProfilePage = () => {
   return (
     <DashboardLayout
-      title="Profile"
-      description="List of all Profile, create new Profile, and manage existing Profiles."
+      title="Profil Admin"
+      description="Kelola Profil Admin"
       type="admin"
     >
       <Profile />

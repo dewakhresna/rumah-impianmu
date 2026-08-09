@@ -21,7 +21,7 @@ export default function Navbar() {
         <Link href="/" className="flex items-center gap-2 text-blue-600">
           <Building2 size={32} strokeWidth={1.5} />
           <span className="text-xl font-bold tracking-tight text-slate-900">
-            Estate<span className="text-blue-600">Prime</span>
+            Rumah<span className="text-blue-600">Impianmu</span>
           </span>
         </Link>
 

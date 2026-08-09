@@ -41,7 +41,7 @@ export const Register = () => {
   return (
     <>
       <Head>
-        <title>Daftar Akun | EstatePrime</title>
+        <title>Daftar Akun | RumahImpianmu</title>
         <meta name="viewport" content="width=device-width, initial-scale=1" />
       </Head>
 
@@ -64,7 +64,7 @@ export const Register = () => {
               <div className="flex items-center justify-center lg:justify-start gap-2 text-blue-600 mb-6">
                 <Building2 size={40} strokeWidth={1.5} />
                 <span className="text-2xl font-bold tracking-tight text-slate-900">
-                  Estate<span className="text-blue-600">Prime</span>
+                  Rumah<span className="text-blue-600">Impianmu</span>
                 </span>
               </div>
               <h1 className="text-3xl font-bold tracking-tight text-slate-900 mb-2">

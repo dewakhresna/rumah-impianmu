@@ -5,7 +5,7 @@ import Head from "next/head";
 const AdminUserPage = () => {
   return (
     <DashboardLayout
-      title="User Data"
+      title="Data Pengguna"
       description="Daftar semua pengguna, dan kelola pengguna."
       type="admin"
     >

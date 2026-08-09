@@ -28,7 +28,7 @@ const DropdownAction = (props: PropTypes) => {
       </DropdownTrigger>
       <DropdownMenu>
         <DropdownItem key="detail-event-button" onPress={onPressButtonDetail}>
-          Detail
+          Edit
         </DropdownItem>
         {!hideButtonDelete ? (
           <DropdownItem
@@ -36,7 +36,7 @@ const DropdownAction = (props: PropTypes) => {
             className="text-danger-600"
             onPress={onPressButtonDelete}
           >
-            Delete
+            Hapus
           </DropdownItem>
         ) : null}
       </DropdownMenu>

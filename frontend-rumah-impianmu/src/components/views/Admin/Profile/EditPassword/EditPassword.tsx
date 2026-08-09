@@ -39,7 +39,7 @@ const PageHeader = () => {
       <div className="flex items-center gap-3">
         <span className="text-3xl">🔒</span>
         <h1 className="text-2xl sm:text-3xl font-bold text-blue-700 tracking-tight">
-          Change Password
+          Ubah Kata Sandi
         </h1>
       </div>
       <p className="text-sm sm:text-base font-medium text-slate-500">

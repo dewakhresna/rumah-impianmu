@@ -161,7 +161,7 @@ function HouseCard({
           onPress={() => router.push(`/listings/${house.id}`)}
           className="flex-1 h-12 bg-gradient-to-r from-blue-600 to-blue-700 text-white font-semibold rounded-xl shadow-md shadow-blue-500/20 hover:shadow-lg hover:shadow-blue-500/40 hover:-translate-y-0.5 transition-all duration-300"
         >
-          View Details
+          Lihat Detail
         </Button>
       </CardFooter>
     </Card>

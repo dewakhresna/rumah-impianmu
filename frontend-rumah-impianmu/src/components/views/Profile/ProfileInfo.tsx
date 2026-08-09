@@ -69,7 +69,7 @@ export default function ProfileInfo() {
               variant="bordered"
               className="border-slate-200 text-slate-700 font-medium px-8 rounded-xl hover:bg-slate-50 hover:border-blue-200 transition-colors"
             >
-              Change Password
+              Ubah Kata Sandi
             </Button>
           </div>
         </CardBody>

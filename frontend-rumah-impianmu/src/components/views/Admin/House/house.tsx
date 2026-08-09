@@ -64,7 +64,7 @@ const House = () => {
     <section className="p-4">
       {Object.keys(query).length > 0 && (
         <DataTable
-          buttonTopContentLabel="Add New House"
+          buttonTopContentLabel="Tambah Data Rumah"
           columns={COLUMN_LISTS_HOUSE}
           data={dataHouse?.data || []}
           emptyContent="The house data is still empty"

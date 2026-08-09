@@ -4,8 +4,8 @@ import DetailHouse from "@/components/views/Admin/DetailHouse/DetailHouse";
 const AdminDetailHousePage = () => {
     return (
         <DashboardLayout
-            title="House"
-            description="List of all House, create new house, and manage existing houses."
+            title="Data Rumah"
+            description="Daftar semua rumah, buat rumah baru, dan kelola rumah yang sudah ada."
             type="admin"
         >
             <DetailHouse />
