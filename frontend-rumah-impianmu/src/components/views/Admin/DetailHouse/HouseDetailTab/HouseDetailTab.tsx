@@ -12,12 +12,13 @@ import {
 import useHouseDetailTab from "./useHouseDetailTab";
 import { Controller } from "react-hook-form";
 import { useEffect } from "react";
+import environment from "@/config/environment";
 
 export interface IHouseDetail {
   house_id?: number;
   contact_name?: string;
   contact?: string;
-  location?: string;   
+  location?: string;
   description?: string;
   image_1?: string;
   image_2?: string;
@@ -58,7 +59,9 @@ const HouseDetailTab = (props: PropTypes) => {
 
     if (typeof imagePath === "string") {
       if (imagePath.startsWith("http")) return imagePath;
-      return `http://localhost:5000${imagePath}`;
+      const baseUrl =
+        environment.Domain?.replace(/\/$/, "") || "http://localhost:5000";
+      return `${baseUrl}${imagePath}`;
     }
     if (imagePath && (imagePath as FileList).length > 0) {
       return URL.createObjectURL((imagePath as FileList)[0]);
@@ -70,7 +73,7 @@ const HouseDetailTab = (props: PropTypes) => {
     if (dataDetail) {
       setValue("contact_name", dataDetail.contact_name || "");
       setValue("contact", dataDetail.contact || "");
-      setValue("location", dataDetail.location || "");        
+      setValue("location", dataDetail.location || "");
       setValue("description", dataDetail.description || "");
       setValue("beds", dataDetail.beds || 0);
       setValue("baths", dataDetail.baths || 0);
@@ -229,7 +232,10 @@ const HouseDetailTab = (props: PropTypes) => {
 
           {/* BARIS 3: NAMA KONTAK & KONTAK */}
           <div className="flex gap-4">
-            <Skeleton isLoaded={dataDetail !== undefined} className="w-1/2 rounded-lg">
+            <Skeleton
+              isLoaded={dataDetail !== undefined}
+              className="w-1/2 rounded-lg"
+            >
               <Controller
                 name="contact_name"
                 control={control}
@@ -248,7 +254,10 @@ const HouseDetailTab = (props: PropTypes) => {
               />
             </Skeleton>
 
-            <Skeleton isLoaded={dataDetail !== undefined} className="w-1/2 rounded-lg">
+            <Skeleton
+              isLoaded={dataDetail !== undefined}
+              className="w-1/2 rounded-lg"
+            >
               <Controller
                 name="contact"
                 control={control}

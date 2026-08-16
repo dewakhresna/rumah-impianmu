@@ -8,7 +8,6 @@ import "./models/house.model.js";
 import "./models/house_detail.model.js";
 import "./models/favorite.model.js";
 
-
 const app = express();
 
 app.use(cors());
@@ -24,8 +23,8 @@ app.listen(PORT, () => {
   console.log(`Server is running on http://localhost:${PORT}`);
 });
 
-sequelize
-  .sync({ alter: true })
-  .then(() => console.log("Database tersinkronisasi!"));
+// sequelize
+//   .sync({ alter: true })
+//   .then(() => console.log("Database tersinkronisasi!"));
 
-// await sequelize.sync();
+sequelize.sync().then(() => console.log("Database tersinkronisasi!"));
