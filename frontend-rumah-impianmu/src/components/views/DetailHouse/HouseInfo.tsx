@@ -11,6 +11,10 @@ const formatRupiah = (angka: number) => {
 };
 
 export default function HouseInfo({ house }: { house: HouseData }) {
+  const locationText = house.HouseDetail?.location?.trim()
+    ? `${house.HouseDetail.location.trim()}, Kota Bekasi`
+    : "Kota Bekasi";
+
   return (
     <div className="flex flex-col gap-8 w-full">
       
@@ -27,7 +31,7 @@ export default function HouseInfo({ house }: { house: HouseData }) {
         </p>
         <p className="flex items-center gap-2 text-slate-500 mt-3 text-lg">
           <MapPin size={20} className="text-blue-500 shrink-0" />
-          Jarak Akses: {house.c2_jarak} km
+          {locationText}
         </p>
       </div>
 
@@ -60,7 +64,7 @@ export default function HouseInfo({ house }: { house: HouseData }) {
           <span className="text-lg font-bold text-slate-800">
             {house.c4_luas} <span className="text-sm font-medium">m²</span>
           </span>
-          <span className="text-sm text-slate-500">Luas Tanah</span>
+          <span className="text-sm text-slate-500">Luas Bangunan</span>
         </div>
       </div>
 

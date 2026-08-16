@@ -19,7 +19,6 @@ export function useChat() {
   const [userFavorites, setUserFavorites] = useState<any[]>([]);
   const [isMounted, setIsMounted] = useState(false);
 
-  // STATE BARU: Untuk menampung nilai Hard Filter
   const [filters, setFilters] = useState({
     hargaMin: "",
     hargaMax: "",
@@ -112,7 +111,6 @@ export function useChat() {
     setIsLoading(true);
 
     try {
-      // PERUBAHAN: Menambahkan nilai filter ke dalam payload
       const payload = {
         pesan: userMessage.text,
         hargaMin: filters.hargaMin ? Number(filters.hargaMin) : undefined,
@@ -125,7 +123,6 @@ export function useChat() {
 
       const response = await api.post("/chat/send", payload);
 
-      // Mengambil pesan natural dari AI dan daftar rumah
       const { balasan_ai, rekomendasi } = response.data.data;
 
       const daftarRekomendasi = (rekomendasi || []).map((house: any) => {
@@ -144,7 +141,7 @@ export function useChat() {
           role: "admin",
           text:
             balasan_ai ||
-            "Berikut adalah rekomendasi rumah terbaik untuk Anda:", // Menggunakan kalimat dari AI
+            "Berikut adalah rekomendasi rumah terbaik untuk Anda:",
           houses: daftarRekomendasi,
         },
       ]);
@@ -163,9 +160,7 @@ export function useChat() {
           },
         ]);
       }
-      // 2. Jika errornya BENAR-BENAR rusak (misal: Server mati (500) atau API Groq habis kuota)
       else {
-        // Barulah tampilkan error merah di console
         console.error("Kesalahan Sistem/Jaringan:", error);
 
         setMessages((prev) => [
@@ -190,7 +185,7 @@ export function useChat() {
     messagesEndRef,
     handleSendMessage,
     currentUserId,
-    filters, // Diekspor agar bisa dihubungkan ke Select Box / Input UI
-    setFilters, // Diekspor agar bisa dihubungkan ke Select Box / Input UI
+    filters,
+    setFilters,
   };
 }

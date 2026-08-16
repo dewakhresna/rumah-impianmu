@@ -13,6 +13,7 @@ export interface HouseDetailAttributes {
   image_3: string | null;
   beds: number | null;
   baths: number | null;
+  location: string | null;
 }
 
 class HouseDetail extends Model<HouseDetailAttributes> implements HouseDetailAttributes {
@@ -26,6 +27,7 @@ class HouseDetail extends Model<HouseDetailAttributes> implements HouseDetailAtt
   declare image_3: string | null;
   declare beds: number | null;
   declare baths: number | null;
+  declare location: string | null;
 }
 
 HouseDetail.init({
@@ -54,6 +56,7 @@ HouseDetail.init({
   image_3: DataTypes.STRING,
   beds: DataTypes.INTEGER,
   baths: DataTypes.INTEGER,
+  location: DataTypes.STRING,
 }, {
   sequelize,
   tableName: 'house_details',

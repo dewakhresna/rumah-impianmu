@@ -27,3 +27,5 @@ app.listen(PORT, () => {
 sequelize
   .sync({ alter: true })
   .then(() => console.log("Database tersinkronisasi!"));
+
+// await sequelize.sync();

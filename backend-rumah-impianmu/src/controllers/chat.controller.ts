@@ -23,7 +23,7 @@ export default {
         return res.status(400).json({ message: "Pesan wajib diisi" });
       }
 
-      // --- LOGGING 1: INPUT PENGGUNA ---
+      // --- INPUT PENGGUNA
       console.log("\n=========================================================");
       console.log("📥 MENERIMA PESAN DARI PENGGUNA (LIVECHAT)");
       console.log("=========================================================");
@@ -37,7 +37,6 @@ export default {
         "Luas Max": luasMax || "Tidak dibatasi"
       }]);
 
-      // 2. Tarik data MENGGUNAKAN Filter Mutlak
       console.log("\n🗃️ QUERY KE DATABASE BERDASARKAN FILTER...");
       const rawData = await HouseService.getFilteredForChat({
         hargaMin, hargaMax, beds, baths, luasMin, luasMax
@@ -74,7 +73,7 @@ export default {
         });
       }
 
-      // 3. Ekstraksi Bobot & Generate Balasan via AI Groq
+      // Ekstraksi Bobot & Generate Balasan via AI Groq
       console.log("\n🤖 MENGIRIM PESAN KE AI UNTUK EKSTRAKSI BOBOT...");
       const completion = await groq.chat.completions.create({
         messages: [
@@ -123,7 +122,7 @@ export default {
       const bobotUser = aiResponse.bobot;
       const pesanBalasan = aiResponse.balasan_chat;
 
-      // 4. Proses Eksekusi TOPSIS
+      // Proses Eksekusi TOPSIS
       let hasilRekomendasi = [];
       
       // Case Hanya 1 Data Tersisa
@@ -132,11 +131,10 @@ export default {
         hasilRekomendasi = [{ ...dataRumah[0], skor: "1.0000" }];
       } else {
         console.log("\n⚙️ MENERUSKAN DATA DAN BOBOT AI KE ALGORITMA TOPSIS...");
-        // Di sini fungsi hitungTopsis akan dipanggil, dan log dari file topsis.ts akan muncul di terminal
         hasilRekomendasi = hitungTopsis(dataRumah, bobotUser);
       }
 
-      // 5. Respon Final ke Frontend
+      // Respon Final ke Frontend
       console.log("\n🚀 MENGIRIM 3 REKOMENDASI TERATAS UNTUK DITAMPILKAN");
       
       return res.status(200).json({
@@ -144,7 +142,7 @@ export default {
         data: {
           balasan_ai: pesanBalasan,
           bobot_ekstraksi: bobotUser,
-          rekomendasi: hasilRekomendasi.slice(0, 3), // Kirim Top 3 data
+          rekomendasi: hasilRekomendasi.slice(0, 3),
         },
       });
     } catch (error: any) {

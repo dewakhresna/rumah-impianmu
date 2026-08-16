@@ -14,7 +14,8 @@ export interface HouseData {
     beds: number | null;
     baths: number | null;
     contact: string | null;      
-    contact_name: string | null;  
+    contact_name: string | null; 
+    location?: string | null; 
   };
   isFavorite?: boolean;
   favoriteId?: number | null;

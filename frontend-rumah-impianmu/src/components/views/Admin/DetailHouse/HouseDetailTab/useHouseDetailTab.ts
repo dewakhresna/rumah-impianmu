@@ -4,7 +4,9 @@ import { useForm } from "react-hook-form";
 import * as yup from "yup";
 
 const schema = yup.object().shape({
+  contact_name: yup.string().required("Nama kontak/agen wajib diisi"),
   contact: yup.string().required("Kontak pemilik/agen wajib diisi"),
+  location: yup.string().required("Lokasi properti wajib diisi"),
   description: yup.string().required("Deskripsi wajib diisi"),
   beds: yup.number().typeError("Harus berupa angka").required("Jumlah kamar tidur wajib diisi"),
   baths: yup.number().typeError("Harus berupa angka").required("Jumlah kamar mandi wajib diisi"),
@@ -37,7 +39,7 @@ const useHouseDetailTab = () => {
   const preview2 = watch("image_2");
   const preview3 = watch("image_3");
 
-const handleUploadImage = (
+  const handleUploadImage = (
     fieldName: "image_1" | "image_2" | "image_3",
     files: FileList,
     onChange: (...event: any[]) => void
@@ -55,7 +57,6 @@ const handleUploadImage = (
       }
     });
   };
-
 
   const handleDeleteImage = (
     fieldName: "image_1" | "image_2" | "image_3",

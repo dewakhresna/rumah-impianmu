@@ -133,7 +133,7 @@ export const hitungTopsis = (data: Rumah[], bobotObj: any): Rumah[] => {
       ...row,
       D_Positif: Number(dPos.toFixed(4)),
       D_Negatif: Number(dNeg.toFixed(4)),
-      Skor_V: Number(skorAkhir), // Nilai V
+      Skor_V: Number(skorAkhir),
       skor: skorAkhir, 
     };
   });
@@ -148,6 +148,5 @@ export const hitungTopsis = (data: Rumah[], bobotObj: any): Rumah[] => {
 
   console.log("\n✅ PERHITUNGAN SELESAI. Mengembalikan hasil berdasarkan skor...\n");
 
-  // Kembalikan data yang sudah di-sorting dari nilai skor terbesar ke terkecil
   return hasilAkhir.sort((a, b) => parseFloat(b.skor!) - parseFloat(a.skor!));
 };

@@ -9,14 +9,15 @@ import {
   Spinner,
   Textarea,
 } from "@heroui/react";
-import Image from "next/image";
 import useHouseDetailTab from "./useHouseDetailTab";
 import { Controller } from "react-hook-form";
 import { useEffect } from "react";
 
 export interface IHouseDetail {
   house_id?: number;
+  contact_name?: string;
   contact?: string;
+  location?: string;   
   description?: string;
   image_1?: string;
   image_2?: string;
@@ -67,7 +68,9 @@ const HouseDetailTab = (props: PropTypes) => {
 
   useEffect(() => {
     if (dataDetail) {
+      setValue("contact_name", dataDetail.contact_name || "");
       setValue("contact", dataDetail.contact || "");
+      setValue("location", dataDetail.location || "");        
       setValue("description", dataDetail.description || "");
       setValue("beds", dataDetail.beds || 0);
       setValue("baths", dataDetail.baths || 0);
@@ -224,26 +227,68 @@ const HouseDetailTab = (props: PropTypes) => {
             </Skeleton>
           </div>
 
+          {/* BARIS 3: NAMA KONTAK & KONTAK */}
+          <div className="flex gap-4">
+            <Skeleton isLoaded={dataDetail !== undefined} className="w-1/2 rounded-lg">
+              <Controller
+                name="contact_name"
+                control={control}
+                render={({ field }) => (
+                  <Input
+                    {...field}
+                    value={field.value || ""}
+                    label="Nama Kontak/Agen"
+                    labelPlacement="outside"
+                    variant="bordered"
+                    placeholder="Contoh: Budi Santoso"
+                    isInvalid={errors.contact_name !== undefined}
+                    errorMessage={errors.contact_name?.message}
+                  />
+                )}
+              />
+            </Skeleton>
+
+            <Skeleton isLoaded={dataDetail !== undefined} className="w-1/2 rounded-lg">
+              <Controller
+                name="contact"
+                control={control}
+                render={({ field }) => (
+                  <Input
+                    {...field}
+                    value={field.value || ""}
+                    label="Kontak (WhatsApp / Telepon)"
+                    labelPlacement="outside"
+                    variant="bordered"
+                    placeholder="Contoh: 081234567890"
+                    isInvalid={errors.contact !== undefined}
+                    errorMessage={errors.contact?.message}
+                  />
+                )}
+              />
+            </Skeleton>
+          </div>
+
+          {/* BARIS 4: LOKASI PROPERTI */}
           <Skeleton isLoaded={dataDetail !== undefined} className="rounded-lg">
             <Controller
-              name="contact"
+              name="location"
               control={control}
               render={({ field }) => (
                 <Input
                   {...field}
                   value={field.value || ""}
-                  label="Kontak (WhatsApp / Telepon)"
+                  label="Lokasi Properti"
                   labelPlacement="outside"
                   variant="bordered"
-                  placeholder="Contoh: 081234567890"
-                  isInvalid={errors.contact !== undefined}
-                  errorMessage={errors.contact?.message}
+                  placeholder="Contoh: Jl. Sudirman No. 1, Jakarta"
+                  isInvalid={errors.location !== undefined}
+                  errorMessage={errors.location?.message}
                 />
               )}
             />
           </Skeleton>
 
-          {/* BARIS 3: DESKRIPSI */}
+          {/* BARIS 5: DESKRIPSI */}
           <Skeleton isLoaded={dataDetail !== undefined} className="rounded-lg">
             <Controller
               name="description"

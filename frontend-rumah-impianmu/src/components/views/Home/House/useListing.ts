@@ -13,6 +13,7 @@ export interface HouseData {
     image_1: string | null;
     beds: number | null;
     baths: number | null;
+    location?: string | null;
   };
   isFavorite?: boolean;
   favoriteId?: number | null;

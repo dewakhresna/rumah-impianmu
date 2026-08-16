@@ -53,6 +53,10 @@ function HouseCard({ house, currentUserId }: { house: HouseData; currentUserId: 
   const beds = house.HouseDetail?.beds || 0;
   const baths = house.HouseDetail?.baths || 0;
 
+  const locationText = house.HouseDetail?.location?.trim()
+    ? `${house.HouseDetail.location.trim()}, Kota Bekasi`
+    : "Kota Bekasi";
+
   const handleFavoriteClick = async () => {
     if (!currentUserId) {
       alert("Silakan login terlebih dahulu untuk menyimpan properti impian Anda.");
@@ -104,8 +108,8 @@ function HouseCard({ house, currentUserId }: { house: HouseData; currentUserId: 
           <h4 className="text-lg font-semibold text-slate-900 truncate">
             {house.nama}
           </h4>
-          <p className="flex items-center gap-1 text-sm text-slate-500 mt-1">
-            <MapPin size={14} className="text-blue-500" /> Kota Bekasi
+          <p className="flex items-center gap-1 text-sm text-slate-500 mt-1 truncate">
+            <MapPin size={14} className="text-blue-500 shrink-0" /> {locationText}
           </p>
         </div>
         <p className="text-sm text-slate-600 line-clamp-2 mt-2">
@@ -125,7 +129,7 @@ function HouseCard({ house, currentUserId }: { house: HouseData; currentUserId: 
         </div>
       </div>
       <CardFooter className="px-5 pb-5 pt-0 flex items-center gap-3">
-        {/* Favorite Button dihubungkan dengan handler */}
+        {/* Favorite Button */}
         <Button
           isIconOnly
           variant="bordered"
@@ -201,7 +205,7 @@ export default function ListingGrid() {
     );
   }
 
-return (
+  return (
     <div className="flex flex-col gap-10 pb-8">
       <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
         {houses.map((house) => (

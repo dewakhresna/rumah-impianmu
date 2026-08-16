@@ -14,7 +14,9 @@ const schema = yup.object().shape({
   c3_keamanan: yup.number().typeError("Security value must be a number").required("Security is mandatory"),
   c4_luas: yup.number().typeError("Area must be a number").required("Area is required"),
   
+  contact_name: yup.string().required("Contact name is mandatory"),
   contact: yup.string().required("Contact is mandatory"),
+  location: yup.string().required("Location is mandatory"),
   description: yup.string().required("Description is mandatory"),
   beds: yup.number().typeError("Beds must be a number").required("Beds are required"),
   baths: yup.number().typeError("Baths must be a number").required("Baths are required"),
@@ -55,7 +57,9 @@ const useAddHouseModal = () => {
 
     const formData = new FormData();
     formData.append("house_id", String(newHouseId));
+    formData.append("contact_name", payload.contact_name);
     formData.append("contact", payload.contact);
+    formData.append("location", payload.location);
     formData.append("description", payload.description);
     formData.append("beds", String(payload.beds));
     formData.append("baths", String(payload.baths));

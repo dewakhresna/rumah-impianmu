@@ -66,6 +66,10 @@ function HouseCard({
   const beds = house.HouseDetail?.beds || 0;
   const baths = house.HouseDetail?.baths || 0;
 
+  const locationText = house.HouseDetail?.location?.trim()
+  ? `${house.HouseDetail.location.trim()}, Kota Bekasi`
+  : "Kota Bekasi";
+
   const handleFavoriteClick = async () => {
     if (!currentUserId) {
       alert(
@@ -119,7 +123,7 @@ function HouseCard({
           {house.nama}
         </h4>
         <p className="flex items-center gap-1.5 text-sm text-slate-500 mt-1">
-          <MapPin size={16} className="text-blue-500 shrink-0" /> Kota Bekasi
+          <MapPin size={16} className="text-blue-500 shrink-0" /> {locationText}
         </p>
 
         <p className="text-sm text-slate-600 line-clamp-2 mt-3 leading-relaxed">

@@ -239,17 +239,54 @@ const AddHouseModal = (props: PropTypes) => {
                   />
                 </div>
 
+                {/* --- TAMBAHAN CONTACT NAME DAN CONTACT (Berdampingan) --- */}
+                <div className="flex flex-col sm:flex-row gap-4">
+                  <Controller
+                    name="contact_name"
+                    control={control}
+                    render={({ field }) => (
+                      <Input
+                        {...field}
+                        label="Nama Kontak/Agen"
+                        variant="bordered"
+                        placeholder="Contoh: Budi Santoso"
+                        isInvalid={errors.contact_name !== undefined}
+                        errorMessage={errors.contact_name?.message}
+                        className="flex-1"
+                        classNames={customInputClasses}
+                      />
+                    )}
+                  />
+                  <Controller
+                    name="contact"
+                    control={control}
+                    render={({ field }) => (
+                      <Input
+                        {...field}
+                        label="Nomor Telepon Pemilik/Agen"
+                        variant="bordered"
+                        placeholder="Contoh: 0812xxxx"
+                        isInvalid={errors.contact !== undefined}
+                        errorMessage={errors.contact?.message}
+                        className="flex-1"
+                        classNames={customInputClasses}
+                      />
+                    )}
+                  />
+                </div>
+
+                {/* --- TAMBAHAN LOCATION --- */}
                 <Controller
-                  name="contact"
+                  name="location"
                   control={control}
                   render={({ field }) => (
                     <Input
                       {...field}
-                      label="Kontak Pemilik/Agen"
+                      label="Lokasi Properti"
                       variant="bordered"
-                      placeholder="Contoh: 0812xxxx"
-                      isInvalid={errors.contact !== undefined}
-                      errorMessage={errors.contact?.message}
+                      placeholder="Contoh: Jl. Sudirman No. 1, Jakarta"
+                      isInvalid={errors.location !== undefined}
+                      errorMessage={errors.location?.message}
                       classNames={customInputClasses}
                     />
                   )}
