@@ -9,7 +9,7 @@ export default function Home() {
   return (
     <>
       <Head>
-        <title>EstatePrime | Find Your Dream Home</title>
+        <title>Rumah Impianmu | Find Your Dream Home</title>
         <meta
           name="description"
           content="Browse thousands of premium real estate listings with live chat support."

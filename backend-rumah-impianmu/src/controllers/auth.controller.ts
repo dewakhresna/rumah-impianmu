@@ -204,7 +204,7 @@ async updateProfile(req: IReqUser, res: Response) {
           <div style="max-width: 500px; margin: 0 auto; background: white; padding: 30px; border-radius: 10px; text-align: center;">
             <h2 style="color: #2563eb;">Reset Kata Sandi</h2>
             <p>Halo <b>${user.fullName}</b>,</p>
-            <p>Sistem kami telah mereset kata sandi Anda. Berikut adalah kata sandi sementara Anda untuk masuk ke EstatePrime:</p>
+            <p>Sistem kami telah mereset kata sandi Anda. Berikut adalah kata sandi sementara Anda untuk masuk ke Rumah Impianmu:</p>
             <div style="background-color: #f1f5f9; padding: 15px; font-size: 20px; font-weight: bold; letter-spacing: 2px; margin: 20px 0; border-radius: 8px;">
               ${temporaryPassword}
             </div>
@@ -216,7 +216,7 @@ async updateProfile(req: IReqUser, res: Response) {
       await sendMail({
         from: EMAIL_SMTP_USER,
         to: user.email,
-        subject: "Pemulihan Kata Sandi EstatePrime",
+        subject: "Pemulihan Kata Sandi Rumah Impianmu",
         html: emailHtml,
       });
 

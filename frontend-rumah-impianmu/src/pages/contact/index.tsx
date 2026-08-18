@@ -7,7 +7,7 @@ export default function ContactPage() {
   return (
     <>
       <Head>
-        <title>Contact | EstatePrime</title>
+        <title>Contact | Rumah Impianmu</title>
       </Head>
       
       <div className="min-h-screen flex flex-col bg-white text-slate-900 font-sans selection:bg-blue-100 selection:text-blue-900">

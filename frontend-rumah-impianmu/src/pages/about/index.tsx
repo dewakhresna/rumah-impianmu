@@ -7,7 +7,7 @@ export default function AboutPage() {
   return (
     <>
       <Head>
-        <title>Daftar Properti | EstatePrime</title>
+        <title>Daftar Properti | Rumah Impianmu</title>
       </Head>
       
       <div className="min-h-screen flex flex-col bg-white text-slate-900 font-sans selection:bg-blue-100 selection:text-blue-900">

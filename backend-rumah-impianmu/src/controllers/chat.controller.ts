@@ -2,7 +2,7 @@ import { Request, Response } from "express";
 import { Groq } from "groq-sdk";
 import { hitungTopsis, Rumah } from "../utils/topsis.js";
 import HouseService from "../service/house.service.js";
-import { GROQ_API_KEY } from "../utils/env.js"; 
+import { GROQ_API_KEY } from "../utils/env.js";
 
 const groq = new Groq({
   apiKey: GROQ_API_KEY,
@@ -11,35 +11,38 @@ const groq = new Groq({
 export default {
   async chat(req: Request, res: Response) {
     try {
-      // 1. Ekstrak pesan dan Hard Filter dari body request
-      const { 
-        pesan, 
-        hargaMin, hargaMax, 
-        beds, baths,        
-        luasMin, luasMax   
-      } = req.body;
+      const { pesan, hargaMin, hargaMax, beds, baths, luasMin, luasMax } =
+        req.body;
 
       if (!pesan) {
         return res.status(400).json({ message: "Pesan wajib diisi" });
       }
 
-      // --- INPUT PENGGUNA
-      console.log("\n=========================================================");
+      console.log(
+        "\n=========================================================",
+      );
       console.log("📥 MENERIMA PESAN DARI PENGGUNA (LIVECHAT)");
       console.log("=========================================================");
       console.log(`💬 Pesan Pengguna : "${pesan}"`);
       console.log("🎯 Hard Filter:");
-      console.table([{
-        "Harga Min": hargaMin || "Tidak dibatasi",
-        "Harga Max": hargaMax || "Tidak dibatasi",
-        "Kamar Tidur (Beds)": beds || "Tidak dibatasi",
-        "Luas Min": luasMin || "Tidak dibatasi",
-        "Luas Max": luasMax || "Tidak dibatasi"
-      }]);
+      console.table([
+        {
+          "Harga Min": hargaMin || "Tidak dibatasi",
+          "Harga Max": hargaMax || "Tidak dibatasi",
+          "Kamar Tidur (Beds)": beds || "Tidak dibatasi",
+          "Luas Min": luasMin || "Tidak dibatasi",
+          "Luas Max": luasMax || "Tidak dibatasi",
+        },
+      ]);
 
       console.log("\n🗃️ QUERY KE DATABASE BERDASARKAN FILTER...");
       const rawData = await HouseService.getFilteredForChat({
-        hargaMin, hargaMax, beds, baths, luasMin, luasMax
+        hargaMin,
+        hargaMax,
+        beds,
+        baths,
+        luasMin,
+        luasMax,
       });
 
       const dataRumah: Rumah[] = rawData.map((r: any) => ({
@@ -49,27 +52,38 @@ export default {
         c2_jarak: r.c2_jarak ?? 0,
         c3_keamanan: r.c3_keamanan ?? 0,
         c4_luas: r.c4_luas ?? 0,
-        HouseDetail: r.HouseDetail, 
+        HouseDetail: r.HouseDetail,
         imageUrl: r.HouseDetail?.image_1,
       }));
 
-      console.log(`✅ Ditemukan ${dataRumah.length} properti yang sesuai Hard Filter.`);
+      console.log(
+        `✅ Ditemukan ${dataRumah.length} properti yang sesuai Hard Filter.`,
+      );
       if (dataRumah.length > 0) {
         console.log("Daftar Properti yang lolos untuk dihitung TOPSIS:");
-        console.table(dataRumah.map(r => ({
-          ID: r.id, 
-          Nama_Properti: r.nama, 
-          Harga: r.c1_harga 
-        })));
+        console.table(
+          dataRumah.map((r) => ({
+            ID: r.id,
+            Nama_Properti: r.nama,
+            Harga: r.c1_harga,
+          })),
+        );
       }
 
       // Case Data Kosong
       if (dataRumah.length === 0) {
-        console.log("❌ Eksekusi dihentikan karena tidak ada data yang sesuai filter (404 Not Found).\n");
-        return res.status(404).json({ 
+        console.log(
+          "❌ Eksekusi dihentikan karena tidak ada data yang sesuai filter (404 Not Found).\n",
+        );
+        return res.status(404).json({
           status: "not_found",
-          message: "Maaf, tidak ada rumah yang sesuai dengan kriteria filter Anda. Cobalah memperluas rentang harga atau kurangi filter kamar.",
-          data: { balasan_ai: "Saya tidak menemukan rumah yang pas dengan filter tersebut.", rekomendasi: [] }
+          message:
+            "Maaf, tidak ada rumah yang sesuai dengan kriteria filter Anda. Cobalah memperluas rentang harga atau kurangi filter kamar.",
+          data: {
+            balasan_ai:
+              "Saya tidak menemukan rumah yang pas dengan filter tersebut.",
+            rekomendasi: [],
+          },
         });
       }
 
@@ -95,48 +109,64 @@ export default {
                 "C3_Keamanan": 4,
                 "C4_Luas": 3
               }
-            }`
+            }
+            
+            PENTING: Anda HARUS merespons HANYA dengan objek JSON yang valid. JANGAN tambahkan kalimat pengantar, JANGAN gunakan markdown, dan JANGAN tambahkan teks apa pun di luar struktur kurung kurawal JSON.`,
           },
           {
             role: "user",
             content: pesan,
           },
         ],
-        model: "llama-3.3-70b-versatile",
-        response_format: { type: "json_object" }, 
-        temperature: 0.2, 
+        model: "groq/compound-mini",
+        response_format: { type: "json_object" },
+        temperature: 0.1,
       });
 
       let aiResponse;
       try {
-        aiResponse = JSON.parse(completion.choices[0].message.content || "{}");
-        console.log("✅ Berhasil mengekstrak JSON dari respon AI.");
+        const aiResponseText = completion.choices[0].message?.content || "{}";
+
+        const jsonMatch = aiResponseText.match(/\{[\s\S]*\}/);
+
+        if (!jsonMatch) {
+          throw new Error("Pola JSON tidak ditemukan dalam balasan AI.");
+        }
+
+        aiResponse = JSON.parse(jsonMatch[0]);
+        console.log(
+          "✅ Berhasil mengekstrak JSON dari respon AI:\n",
+          aiResponse,
+        );
       } catch (e) {
-        console.error("❌ Gagal mem-parsing JSON dari Groq:", e);
+        console.error(
+          "❌ Gagal mem-parsing JSON dari Groq. Menggunakan Fallback. Error:",
+          e,
+        );
         aiResponse = {
-          balasan_chat: "Berikut adalah properti terbaik yang berhasil saya rangkum untuk Anda.",
-          bobot: { C1_Harga: 3, C2_Jarak: 3, C3_Keamanan: 3, C4_Luas: 3 }
+          balasan_chat:
+            "Berikut adalah properti terbaik yang berhasil saya rangkum untuk Anda berdasarkan ketersediaan kami.",
+          bobot: { C1_Harga: 3, C2_Jarak: 3, C3_Keamanan: 3, C4_Luas: 3 },
         };
       }
 
       const bobotUser = aiResponse.bobot;
       const pesanBalasan = aiResponse.balasan_chat;
 
-      // Proses Eksekusi TOPSIS
       let hasilRekomendasi = [];
-      
-      // Case Hanya 1 Data Tersisa
+
       if (dataRumah.length === 1) {
-        console.log("\n⚠️ [INFO] Hanya 1 data yang lolos filter. Melewati perhitungan TOPSIS dan memberikan skor absolut 1.0000.");
+        console.log(
+          "\n⚠️ [INFO] Hanya 1 data yang lolos filter. Melewati perhitungan TOPSIS dan memberikan skor absolut 1.0000.",
+        );
         hasilRekomendasi = [{ ...dataRumah[0], skor: "1.0000" }];
       } else {
         console.log("\n⚙️ MENERUSKAN DATA DAN BOBOT AI KE ALGORITMA TOPSIS...");
         hasilRekomendasi = hitungTopsis(dataRumah, bobotUser);
       }
 
-      // Respon Final ke Frontend
       console.log("\n🚀 MENGIRIM 3 REKOMENDASI TERATAS UNTUK DITAMPILKAN");
-      
+
       return res.status(200).json({
         status: "success",
         data: {

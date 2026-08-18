@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useRouter } from "next/navigation";
 import {
   Card,
   CardHeader,
@@ -16,6 +17,7 @@ import { useChat } from "./useChat";
 import ChatBubble from "./ChatBubble";
 
 export default function LiveChat() {
+  const router = useRouter();
   const {
     messages,
     input,
@@ -31,7 +33,18 @@ export default function LiveChat() {
   const [rentangHarga, setRentangHarga] = useState(new Set([]));
   const [rentangLuas, setRentangLuas] = useState(new Set([]));
 
-  // FUNGSI BARU: Menerjemahkan pilihan teks ke angka matematika untuk backend
+  const onSubmitChat = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!currentUserId) {
+      alert(
+        "Silakan login terlebih dahulu untuk menggunakan fitur Livechat Asisten.",
+      );
+      router.push("/auth/login");
+      return;
+    }
+    handleSendMessage(e);
+  };
+
   const handleHargaChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     const val = e.target.value;
     setRentangHarga(new Set([val] as any));
@@ -41,30 +54,28 @@ export default function LiveChat() {
 
     switch (val) {
       case "<1M":
-        max = "1000000000"; // Di bawah 1 Miliar
+        max = "1000000000";
         break;
       case "1M-2M":
         min = "1000000000";
-        max = "2000000000"; // 1 s/d 2 Miliar
+        max = "2000000000";
         break;
       case "2M-3M":
         min = "2000000000";
-        max = "3000000000"; // 2 s/d 3 Miliar
+        max = "3000000000";
         break;
       case "3M-4M":
         min = "3000000000";
-        max = "4000000000"; // 3 s/d 4 Miliar
+        max = "4000000000";
         break;
       case ">4M":
-        min = "4000000000"; // Di atas 4 Miliar
+        min = "4000000000";
         break;
       default:
-        // Jika dikosongkan/reset
         min = "";
         max = "";
     }
 
-    // Mengirim angka yang sudah diterjemahkan ke state global filters
     setFilters({ ...filters, hargaMin: min, hargaMax: max });
   };
 
@@ -77,7 +88,7 @@ export default function LiveChat() {
 
     switch (val) {
       case "<100":
-        max = "100"; // Maksimal 100 m²
+        max = "100"; 
         break;
       case "101-200":
         min = "101";
@@ -145,9 +156,7 @@ export default function LiveChat() {
           <div ref={messagesEndRef} />
         </CardBody>
 
-        {/* --- PERBAIKAN 2: Tambahkan Area Filter di dalam Footer --- */}
         <CardFooter className="flex-col rounded-b-2xl border-t border-slate-100 bg-white p-4 gap-3">
-          {/* Baris Hard Filter (Bisa digeser ke kanan/kiri jika layarnya kecil) */}
           <div className="flex w-full items-center gap-2 overflow-x-auto pb-1 no-scrollbar">
             <div className="flex items-center justify-center h-8 w-8 rounded-full bg-slate-100 shrink-0 text-slate-500">
               <SlidersHorizontal size={14} />
@@ -202,18 +211,16 @@ export default function LiveChat() {
             </Select>
           </div>
 
-          {/* Form Chat */}
           <form
             className="flex w-full items-end gap-2"
-            onSubmit={handleSendMessage}
+            onSubmit={onSubmitChat}
           >
             <Textarea
-              minRows={1} // Tinggi awal hanya 1 baris
-              maxRows={5} // Maksimal membesar sampai 5 baris, setelah itu akan muncul scroll
+              minRows={1}
+              maxRows={5}
               value={input}
               onChange={(e) => setInput(e.target.value)}
               onKeyDown={(e) => {
-                // Trik agar saat tekan Enter langsung mengirim pesan
                 if (e.key === "Enter" && !e.shiftKey) {
                   e.preventDefault();
                   if (input.trim()) {
@@ -226,7 +233,7 @@ export default function LiveChat() {
               variant="flat"
               radius="lg"
               classNames={{
-                input: "text-sm resize-none", // resize-none agar ujung kanan bawah tidak bisa ditarik manual
+                input: "text-sm resize-none",
                 inputWrapper:
                   "bg-slate-100 shadow-none hover:bg-slate-200 focus-within:!bg-white focus-within:ring-2 focus-within:ring-blue-100 items-center py-2",
               }}
@@ -237,7 +244,7 @@ export default function LiveChat() {
               isLoading={isLoading}
               isIconOnly
               color="primary"
-              className="shrink-0 rounded-lg bg-blue-600 mb-1" // mb-1 agar tombol sejajar dengan baris pertama Textarea
+              className="shrink-0 rounded-lg bg-blue-600 mb-1"
             >
               <Send size={18} />
             </Button>

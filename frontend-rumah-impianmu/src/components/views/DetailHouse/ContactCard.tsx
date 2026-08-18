@@ -90,7 +90,7 @@ export default function ContactCard({
           <div>
             <p className="text-xs font-semibold text-slate-400 uppercase tracking-wider mb-0.5">Agen Properti</p>
             <h4 className="text-lg font-bold text-slate-900 leading-tight">
-              {contactName || "Agen EstatePrime"}
+              {contactName || "Agen Rumah Impianmu"}
             </h4>
             <p className="text-sm text-blue-600 font-medium">Verified Agent</p>
           </div>

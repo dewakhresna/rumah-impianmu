@@ -133,7 +133,7 @@ function ChatHouseCard({
           <p className="flex items-center gap-1.5 text-sm text-slate-500 mt-2">
             <MapPin size={14} className="text-slate-400 shrink-0" />
             <span className="truncate">
-              {house.lokasi || "Lokasi Tersedia"}
+              {house.HouseDetail?.location || house.location || "Lokasi tidak tersedia"}, Kota Bekasi
             </span>
           </p>
         </div>

@@ -34,7 +34,7 @@ export default function HouseDetailContainer({ id }: { id: string | string[] | u
   return (
     <>
       <Head>
-        <title>{house.nama} | EstatePrime</title>
+        <title>{house.nama} | Rumah Impianmu</title>
         <meta 
           name="description" 
           content={house.HouseDetail?.description?.substring(0, 150) || "Detail properti idaman Anda."} 

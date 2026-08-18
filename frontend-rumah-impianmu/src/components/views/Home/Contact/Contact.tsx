@@ -80,7 +80,7 @@ const ContactInfoSection = () => {
     {
       icon: <Mail size={24} />,
       title: "Email",
-      value: "support@estateprime.com",
+      value: "support@rumah-impianmu.com",
       desc: "Kirimkan email kepada kami kapan saja.",
     },
     {
