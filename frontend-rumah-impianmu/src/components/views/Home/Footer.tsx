@@ -25,40 +25,23 @@ export default function Footer() {
           <div className="flex flex-col gap-4">
             <h4 className="text-slate-900 font-semibold mb-2">Perusahaan</h4>
             <Link href="/about" className="text-sm text-slate-600 hover:text-blue-600 transition-colors">Tentang Kami</Link>
-            <Link href="/careers" className="text-sm text-slate-600 hover:text-blue-600 transition-colors">Karir</Link>
-            <Link href="/blog" className="text-sm text-slate-600 hover:text-blue-600 transition-colors">Blog Properti</Link>
+            <Link href="/listings" className="text-sm text-slate-600 hover:text-blue-600 transition-colors">Rumah</Link>
             <Link href="/contact" className="text-sm text-slate-600 hover:text-blue-600 transition-colors">Hubungi Kami</Link>
           </div>
 
           {/* Kolom 3: Layanan */}
           <div className="flex flex-col gap-4">
             <h4 className="text-slate-900 font-semibold mb-2">Layanan</h4>
-            <Link href="/buy" className="text-sm text-slate-600 hover:text-blue-600 transition-colors">Beli Rumah</Link>
-            <Link href="/rent" className="text-sm text-slate-600 hover:text-blue-600 transition-colors">Sewa Apartemen</Link>
-            <Link href="/sell" className="text-sm text-slate-600 hover:text-blue-600 transition-colors">Jual Properti</Link>
-            <Link href="/calculator" className="text-sm text-slate-600 hover:text-blue-600 transition-colors">Kalkulator KPR</Link>
+            <Link href="/listings" className="text-sm text-slate-600 hover:text-blue-600 transition-colors">Cari Rumah</Link>
+            <Link href="/contact" className="text-sm text-slate-600 hover:text-blue-600 transition-colors">Diskusi</Link>
           </div>
 
           {/* Kolom 4: Newsletter (CRO Strategy) */}
           <div className="flex flex-col gap-4">
             <h4 className="text-slate-900 font-semibold mb-2">Dapatkan Info Terbaru</h4>
             <p className="text-sm text-slate-600 mb-2">
-              Berlangganan newsletter kami untuk mendapatkan penawaran eksklusif.
+              Bergabung dengan kami untuk mendapatkan rekomendasi properti terbaik.
             </p>
-            <form className="flex gap-2" onSubmit={(e) => e.preventDefault()}>
-              <Input 
-                type="email" 
-                placeholder="Email Anda" 
-                variant="bordered"
-                radius="lg"
-                classNames={{
-                  inputWrapper: "bg-slate-50 border-slate-200 hover:border-blue-400 focus-within:!border-blue-600",
-                }}
-              />
-              <Button isIconOnly color="primary" className="bg-blue-600 rounded-lg shrink-0">
-                <Mail size={18} />
-              </Button>
-            </form>
           </div>
 
         </div>
@@ -68,12 +51,6 @@ export default function Footer() {
           <p className="text-sm text-slate-500">
             © {new Date().getFullYear()} Rumah Impianmu. Hak Cipta Dilindungi.
           </p>
-          <div className="flex items-center gap-4 text-slate-400">
-            <Link href="#" className="hover:text-blue-600 transition-colors"><Facebook size={20} /></Link>
-            <Link href="#" className="hover:text-blue-400 transition-colors"><Twitter size={20} /></Link>
-            <Link href="#" className="hover:text-pink-600 transition-colors"><Instagram size={20} /></Link>
-            <Link href="#" className="hover:text-blue-700 transition-colors"><Linkedin size={20} /></Link>
-          </div>
         </div>
       </div>
     </footer>

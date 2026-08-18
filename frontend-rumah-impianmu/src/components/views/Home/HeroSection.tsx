@@ -1,5 +1,6 @@
 import { Button } from "@heroui/react";
 import { Search } from "lucide-react";
+import Link from "next/link";
 
 export default function HeroSection() {
   return (
@@ -12,7 +13,9 @@ export default function HeroSection() {
           Browse thousands of premium real estate listings. Whether you are looking for a modern city penthouse or a quiet suburban retreat, we have the perfect home for you.
         </p>
         <div className="mt-10 flex items-center justify-center gap-x-6">
-          <Button 
+          <Button
+            as={Link}
+            href="/listings"  
             size="lg" 
             color="primary" 
             endContent={<Search size={18} />}

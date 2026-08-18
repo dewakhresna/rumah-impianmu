@@ -25,6 +25,7 @@ import {
   PhoneCall,
   Info,
 } from "lucide-react";
+import Link from "next/link";
 
 export default function ContactPage() {
   return (
@@ -52,18 +53,13 @@ const HeroSection = () => (
     </p>
     <div className="flex flex-col sm:flex-row gap-4 w-full sm:w-auto">
       <Button
+        as={Link}
+        href="/listings" 
         color="primary"
         size="lg"
         className="bg-gradient-to-r from-blue-600 to-blue-700 rounded-xl font-medium shadow-md shadow-blue-500/20 hover:scale-105 hover:shadow-lg transition-all duration-300 px-8 h-14"
       >
         Jelajahi Properti
-      </Button>
-      <Button
-        variant="bordered"
-        size="lg"
-        className="border-slate-200 text-slate-700 bg-white hover:bg-slate-50 rounded-xl font-medium hover:scale-105 transition-all duration-300 px-8 h-14"
-      >
-        Pelajari Lebih Lanjut
       </Button>
     </div>
   </section>
@@ -187,17 +183,12 @@ const CTASection = () => (
         </p>
         <div className="flex flex-col sm:flex-row gap-4 w-full sm:w-auto">
           <Button
+            as={Link}
+            href="/listings"
             size="lg"
             className="bg-white text-blue-700 font-bold rounded-xl shadow-lg hover:scale-105 transition-all duration-300 px-10 h-14"
           >
-            Jelajahi Listing
-          </Button>
-          <Button
-            size="lg"
-            variant="bordered"
-            className="border-blue-300 text-white hover:bg-blue-700/50 rounded-xl font-semibold hover:scale-105 transition-all duration-300 px-10 h-14"
-          >
-            Kirim Pesan
+            Jelajahi Properti
           </Button>
         </div>
       </CardBody>
