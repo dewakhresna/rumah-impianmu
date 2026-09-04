@@ -42,7 +42,7 @@ Pastikan sistem Anda sudah terpasang Node.js (v18+) dan server MySQL yang berjal
 
 1. **Kloning repositori**
    ```bash
-   https://github.com/dewakhresna/rumah-impianmu.git
+   git clone https://github.com/dewakhresna/rumah-impianmu.git
    ```
 
 2. **Instalasi Dependensi Backend**
