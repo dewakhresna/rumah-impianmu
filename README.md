@@ -2,7 +2,7 @@
 
 Sistem Penunjang Keputusan (SPK) cerdas untuk rekomendasi pencarian properti yang mengintegrasikan algoritma **TOPSIS** (*Technique for Order Preference by Similarity to Ideal Solution*) dengan *Natural Language Processing* (NLP) menggunakan **Large Language Model (API Groq)**. 
 
-Sistem ini dirancang untuk mengatasi hambatan psikologis konsumen (*sales anxiety*) dengan menyediakan antarmuka *livechat* AI. Sistem berdasrkan preferensi pengguna dari percakapan bahasa alami, mengekstraknya menjadi bobot kriteria numerik yang dinamis, dan memprosesnya menggunakan metode matematis TOPSIS untuk menghasilkan rekomendasi hunian yang 100% objektif dan transparan.
+Sistem ini dirancang untuk mengatasi hambatan psikologis konsumen (*sales anxiety*) dengan menyediakan antarmuka *livechat* AI. Sistem berdasrkan preferensi pengguna dari percakapan bahasa alami, mengekstraknya menjadi bobot kriteria numerik yang dinamis, dan memprosesnya menggunakan metode matematis TOPSIS untuk menghasilkan rekomendasi rumah yang objektif dan transparan.
 
 ---
 
@@ -10,10 +10,9 @@ Sistem ini dirancang untuk mengatasi hambatan psikologis konsumen (*sales anxiet
 
 * **Ekstraksi Preferensi Dinamis (NLP):** Tidak ada pengisian formulir pembobotan manual. AI menganalisis teks *livechat* pengguna dan secara otomatis memberikan bobot skala 1-5 untuk kriteria Harga, Jarak, Keamanan, dan Luas Bangunan.
 * **Penyaringan Absolut (*Hard Filter*):** Kueri basis data untuk menyeleksi kandidat properti yang mutlak memenuhi spesifikasi dasar pengguna (seperti batas anggaran atau minimal jumlah kamar) sebelum komputasi matriks dilakukan.
-* **Komputasi TOPSIS Otomatis:** Perhitungan *backend* yang melakukan normalisasi matriks, penerapan matriks terbobot, kalkulasi Solusi Ideal Positif/Negatif, dan penentuan Skor Kedekatan Relatif (V_i) secara sekejap.
-* **Generasi Bahasa Alami:** Sistem mengembalikan hasil peringkat TOPSIS tertinggi ke layar pengguna dalam bentuk bahasa sapaan yang natural, ramah, dan argumentatif.
-* **Manajemen Dasbor Admin:** Antarmuka khusus (CRUD) bagi administrator untuk memelihara dan memperbarui himpunan data alternatif properti di wilayah Kota Bekasi.
-
+* **Komputasi TOPSIS Otomatis:** Perhitungan *backend* yang melakukan normalisasi matriks, penerapan matriks terbobot, kalkulasi Solusi Ideal Positif/Negatif, dan penentuan Skor Kedekatan Relatif (Vi) secara cepat.
+* **Natural Language Processing:** Sistem mengembalikan hasil peringkat TOPSIS tertinggi ke layar pengguna dalam bentuk bahasa yang natural, ramah, dan argumentatif.
+* **Manajemen Dasbor Admin:** Antarmuka khusus (CRUD) bagi administrator untuk memelihara dan memperbarui himpunan data alternatif properti.
 ---
 
 ## Stack Teknologi
@@ -31,7 +30,7 @@ Sistem ini dibangun menggunakan arsitektur *Client-Server* modern.
 * Custom Database Connection Module (Manajemen *pool* koneksi)
 
 **Kecerdasan Buatan:**
-* Groq API (Llama 3 / Mixtral model) untuk inferensi LLM dan analisis semantik super cepat.
+* Groq API (Llama 3 / Compound-mini) untuk ekstraksi LLM dan analisis bobot kriteria.
 
 ---
 
